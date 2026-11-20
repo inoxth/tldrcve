@@ -13,6 +13,7 @@ tldrcve.com explains the vulnerabilities people are talking about in plain Engli
 | `assets/` | `site.css`, `site.js`, and `og/` (link-preview images) |
 | `versions/<product>.json` | Latest safe version per product line, shared by every page that embeds it. Edit once, every page updates |
 | `tools/versions.py` | Refreshes `versions/` from vendor feeds (PHP, Node.js so far). Never lowers a version |
+| `tools/check_live.py` | Checks the live site after a deploy: every page, its own preview image, icons, feed, redirects |
 | `tools/cards.py` | Renders the link-preview images. Needs a desktop browser (Chrome, Firefox or Zen) |
 | `site/` | Build output. Never edit or commit it |
 
@@ -41,7 +42,9 @@ The build warns about:
 
 A change is only done when `--strict` passes.
 
-If you change a page's name, CVEs, verdict, scare level or tile line, its link-preview image goes out of date. The build prints a note; run `python3 tools/cards.py` if you can, otherwise a maintainer will before deploying (`--public` builds refuse stale images).
+Every page needs its own link-preview image: `--strict` fails until a new page (or product in `versions/`) has one, so run `python3 tools/cards.py`. If you change a page's name, CVEs, verdict, scare level or tile line, its image goes out of date: the build prints a note, and `--public` builds refuse to deploy until it's redrawn.
+
+After every deploy, run `python3 tools/check_live.py`. It loads every page in the sitemap and fails if a page, its preview image, the favicon, the feed or a CVE/GHSA redirect is wrong.
 
 ## Writing a page
 

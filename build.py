@@ -114,6 +114,9 @@ def page(title: str, description: str, body: str, current: str = "", path: str =
   <meta name="description" content="{html.escape(description)}">
 {seo}
   {FONTS}
+  <link rel="icon" href="/favicon.ico" sizes="16x16 32x32 48x48">
+  <link rel="icon" href="/assets/icons/icon.svg" type="image/svg+xml">
+  <link rel="apple-touch-icon" href="/assets/icons/apple-touch-icon.png">
   <link rel="alternate" type="application/rss+xml" title="tldrcve updates" href="/feed.xml">
   <link rel="stylesheet" href="{fingerprinted("site.css")}">
   <script src="{fingerprinted("site.js")}" defer></script>
@@ -711,13 +714,18 @@ NAME_MAX = 18  # fits one line on the narrowest card (checked in the browser at 
 PRODUCT_MAX = 26  # card label before the date, in a monospace font
 
 
-def card_checks(all_c: list) -> list:
-    """Link-preview images are rendered by tools/cards.py. Flag pages whose card is missing or stale."""
+def card_checks(all_c: list) -> tuple:
+    """Link-preview images are rendered by tools/cards.py. Returns (missing, stale) warnings.
+    A page with no card at all always fails --strict; a card that's only out of date fails --public."""
     sys.path.insert(0, str(ROOT / "tools"))
     import cards
     made = json.loads((ASSETS / "og" / "cards.json").read_text()) if (ASSETS / "og" / "cards.json").exists() else {}
-    stale = [s for s, k in cards.expected_keys(all_c).items() if made.get(s) != k or not (ASSETS / "og" / f"{s}.png").exists()]
-    return [f"link-preview image missing or out of date for {', '.join(stale)}: run python3 tools/cards.py"] if stale else []
+    keys = cards.expected_keys(all_c)
+    missing = [s for s in keys if not (ASSETS / "og" / f"{s}.png").exists()]
+    stale = [s for s, k in keys.items() if s not in missing and made.get(s) != k]
+    fix = "run python3 tools/cards.py"
+    return ([f"no link-preview image for {', '.join(missing)}: {fix}"] if missing else [],
+            [f"link-preview image out of date for {', '.join(stale)}: {fix}"] if stale else [])
 
 
 def editor_checks(all_c: list) -> list:
@@ -913,7 +921,9 @@ def not_found_page() -> str:
 def main() -> None:
     all_c = [json.loads(p.read_text()) for p in sorted(CONTENT.glob("*.json"))]
     warnings = editor_checks(all_c) + versions_checks(all_c)
-    for note in card_checks(all_c):  # blocks a deploy; contributors without a browser just get a note
+    missing_cards, stale_cards = card_checks(all_c)
+    warnings += missing_cards  # every page needs its own card, right away
+    for note in stale_cards:  # an outdated card blocks a deploy; elsewhere it's a note
         if "--public" in sys.argv:
             warnings.append(note)
         else:
@@ -927,6 +937,7 @@ def main() -> None:
         shutil.rmtree(OUT)
     shutil.copytree(ASSETS, OUT / "assets")
     write_fingerprinted()
+    shutil.copyfile(ASSETS / "icons" / "favicon.ico", OUT / "favicon.ico")  # browsers ask for /favicon.ico
     pages = {"index.html": home(all_c), "cves/index.html": cves_page(all_c), "how-we-rate/index.html": how_page(),
              "404.html": not_found_page(), "versions/index.html": versions_index(all_c)}
     pages.update({f"versions/{pid}/index.html": versions_page(v, all_c) for pid, v in VERSIONS.items()})
