@@ -1,0 +1,97 @@
+# AGENTS.md
+
+Instructions for AI agents (and people) working in this repository.
+
+tldrcve.com explains the vulnerabilities people are talking about in plain English: how scary it is, whether you're affected, and what to do. Every claim is sourced. Accuracy matters more than speed or coverage.
+
+## Layout
+
+| Path | What it is |
+|---|---|
+| `content/<slug>.json` | One file per vulnerability. Most changes touch only this folder |
+| `build.py` | Builds the static site into `site/`. Python standard library only |
+| `assets/` | `site.css`, `site.js`, and `og/` (link-preview images) |
+| `versions/<product>.json` | Latest safe version per product line, shared by every page that embeds it. Edit once, every page updates |
+| `tools/versions.py` | Refreshes `versions/` from vendor feeds (PHP, Node.js so far). Never lowers a version |
+| `tools/cards.py` | Renders the link-preview images. Needs a desktop browser (Chrome, Firefox or Zen) |
+| `site/` | Build output. Never edit or commit it |
+
+## Build and check
+
+```bash
+python3 build.py --strict                                   # build; fails on any warning
+python3 -m http.server 4321 --directory site                # preview at http://localhost:4321
+```
+
+Deploy (maintainers only; needs the Cloudflare token):
+
+```bash
+python3 build.py --strict --public
+CLOUDFLARE_API_TOKEN=… npx wrangler@4 deploy
+```
+
+Without `--public` the build tells search engines not to index the site.
+
+The build warns about:
+- names longer than 18 characters
+- card labels longer than 26 characters
+- relative dates ("today")
+- overdue pending items
+- a missing `needs` field when `no_login` is false
+
+A change is only done when `--strict` passes.
+
+If you change a page's name, CVEs, verdict, scare level or tile line, its link-preview image goes out of date. The build prints a note; run `python3 tools/cards.py` if you can, otherwise a maintainer will before deploying (`--public` builds refuse stale images).
+
+## Writing a page
+
+Copy the shape of an existing file (`content/nginx2root.json` is a good model).
+
+| Field | What it is |
+|---|---|
+| `slug` | URL path, kebab-case |
+| `name` | Display name or nickname, **≤ 18 chars** (one line on every card) |
+| `aliases` | Lowercase search terms: products, nicknames, related CVE IDs |
+| `cves` | CVE IDs; `[]` if none assigned yet |
+| `ghsa` | Optional: GitHub advisory IDs. Each CVE and GHSA ID also works as a URL (`tldrcve.com/CVE-…`) |
+| `product` | Main product. The card label must stay ≤ 26 chars |
+| `also_in` | Optional: other products that bundle it, shown as "Product (First +N more)" |
+| `disclosed` | `YYYY-MM-DD`, when the bug was made public (drives the All CVEs date filter) |
+| `news` | Optional: when it became news, if later than `disclosed` (drives "Latest" on the homepage) |
+| `updated` | `YYYY-MM-DD` of the last edit |
+| `verdict` | `now`, `if` or `cycle` (see below) |
+| `tile_line` | One line explaining the verdict, about 55 chars max |
+| `summary` | 2-3 plain-English sentences |
+| `status.exploit` | `public` (working code anyone can download), `demonstrated` (shown, code not public) or `none` |
+| `status.attacks` | `seen` (a credible, named report) or `none` |
+| `status.kev` | `{"added": "...", "due": "..."}` from CISA's KEV catalog, or `null` |
+| `status.cisa_alert` | Optional `true`: CISA alert, but not on KEV |
+| `status.no_login` | Optional `true`/`false`; leave out when it depends |
+| `status.needs` | Required when `no_login` is `false`: exactly what access the attacker needs |
+| `status.scare` | 0-4: 0-1 Shrug, 1-2 Keep an eye on it, 2-3 Check today, 3-4 Drop everything |
+| `affected[]` | Conditions that must **all** be true: `label`, `text`, optional `cmd`, `cite` |
+| `do[]` | Steps: `label`, `text`, optional `cmd`, `cite`, optional `pending: {"expected": "YYYY-MM-DD"}`, optional `versions: ["php"]` to show that product's latest safe versions in the step |
+| `fixed_in` | Optional: first fixed version per product line, e.g. `{"php": {"8.5": "8.5.13"}}`. Keys match `versions/<product>.json`. Leave it out when there is no fix |
+| `slack` | Paste-ready summary paragraph, no URL |
+| `sources[]` | `title` ("Publisher: what it supports"), `url`, optional `date`. `cite` numbers are 1-based indexes into this list |
+| `changes[]` | `date` and `text`, newest first; the last entry is "Published." |
+
+### Rules
+- **Sources:**
+  - Every claim has a source that actually says it.
+  - Prefer primary sources: vendor advisories, the CISA KEV catalog, the CVE/NVD record, the researcher's write-up, distro trackers.
+- **No invention:**
+  - Never invent versions, flags, commands or dates.
+  - When sources conflict, say so on the page.
+- **"Are you affected?"** lists only conditions that must all be true. No "or" items. Fold "not affected if…" details into the matching condition.
+- **Commands** must be read-only and exact.
+- **Verdict, checklist and scare level** must agree:
+  - `now`: working exploit or attacks seen, and common setups are exposed.
+  - `if`: serious, but only under conditions the page lists.
+  - `cycle`: real, but hard to reach or low impact.
+- **Writing:**
+  - Plain English and short. No hype words unless quoting an official rating.
+  - Absolute dates only ("19 Nov 2026").
+  - Mark anything still expected as `pending` with an expected date.
+
+Maintainers run an additional review before anything is merged.

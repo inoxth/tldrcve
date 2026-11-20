@@ -1,0 +1,230 @@
+{
+  "slug": "java4shell",
+  "name": "Java4Shell",
+  "aliases": [
+    "openjdk",
+    "java",
+    "jdk",
+    "base64"
+  ],
+  "cves": [
+    "CVE-2026-114938"
+  ],
+  "product": "OpenJDK",
+  "disclosed": "2026-11-17",
+  "updated": "2026-11-20",
+  "verdict": "if",
+  "tile_line": "Only on newer Intel/AMD CPUs.",
+  "summary": "A bug in Java's Base64 decoder can let an attacker run code on your server. It only works on newer Intel/AMD CPUs, so on most systems a two-command check settles whether you need to rush.",
+  "affected": [
+    {
+      "label": "Java 17.0.6+, 21, 25 or 27",
+      "text": "Any distribution (Oracle, Temurin, Corretto, Zulu, Red Hat…) without the November 2026 fix, plus Oracle's Java 8 Performance Pack (`8u511b33-perf`) and Oracle GraalVM for JDK 17/21. Standard Java 8 and 11 aren't affected.",
+      "cmd": "java -version",
+      "cite": [
+        11,
+        2,
+        8,
+        10,
+        17
+      ]
+    },
+    {
+      "label": "CPU has AVX-512 VBMI",
+      "text": "Intel Ice Lake or newer, AMD Zen 4 or newer (including Ryzen). ARM servers (Graviton, Ampere) never are. Run it where the app runs, on every node pool, because clusters often mix CPU generations.",
+      "cmd": "grep -o -m1 avx512vbmi /proc/cpuinfo",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "label": "Untrusted input gets Base64-decoded",
+      "text": "Auth headers, tokens, SAML and uploads all qualify. Assume yes for anything internet-facing; researchers showed it against Jira, Confluence, Artifactory and Jenkins.",
+      "cite": [
+        7,
+        9
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Patch Java",
+      "text": "Oracle: 17.0.21.1, 21.0.13.1, 25.0.5.1 and 27.0.1.1 (17 Nov). Corretto shipped all four lines on 17 Nov. Temurin's fixed builds are out for Linux, Alpine and Apple-silicon Macs, but on 19 Nov not yet for Windows or the `eclipse-temurin` Docker images. Red Hat, Ubuntu and Debian have fixed packages. For Oracle's Java 8 Performance Pack, see Oracle's advisory.",
+      "cite": [
+        16,
+        15,
+        13,
+        14,
+        12,
+        18,
+        19,
+        11
+      ],
+      "versions": [
+        "java"
+      ]
+    },
+    {
+      "label": "Can't patch yet? Set this flag",
+      "text": "Turns off only the vulnerable fast path. Needs a restart. Not an official Oracle workaround.",
+      "cmd": "-XX:-UseBASE64Intrinsics",
+      "cite": [
+        8,
+        3
+      ]
+    },
+    {
+      "label": "Check bundled Java",
+      "text": "Common tools like Jira, Confluence, Artifactory, Jenkins and many others ship with their own Java. Updating the system Java doesn't fix them: update the tool, or set the flag in its own JVM settings. Red Hat still lists its Keycloak build, JBoss EAP OpenJDK 17 images and OpenShift Pipelines as affected.",
+      "cite": [
+        7,
+        9,
+        12
+      ]
+    }
+  ],
+  "fixed_in": {
+    "java": {
+      "27": "27.0.1.1",
+      "25": "25.0.5.1",
+      "21": "21.0.13.1",
+      "17": "17.0.21.1"
+    }
+  },
+  "slack": "Java4Shell (CVE-2026-114938): a Java Base64 bug that can lead to RCE. You're only affected if ALL three are true: Java 17.0.6+/21/25/27 unpatched, a CPU with AVX-512 VBMI (Intel Ice Lake+ / AMD Zen 4+), and untrusted input that gets Base64-decoded. Check the host: grep avx512vbmi /proc/cpuinfo. No attacks seen yet. Fix: Java 17.0.21.1 / 21.0.13.1 / 25.0.5.1 / 27.0.1.1 or your vendor's build (Temurin Windows and Docker images still pending on 19 Nov).",
+  "sources": [
+    {
+      "title": "Calif: original disclosure",
+      "url": "https://calif.io/java4shell",
+      "date": "17 Nov"
+    },
+    {
+      "title": "Wiz: CPU check, workarounds",
+      "url": "https://www.wiz.io/blog/cve-2026-114938-rce-java4shell-openjdk"
+    },
+    {
+      "title": "Sophos: no attacks seen",
+      "url": "https://www.sophos.com/en-us/security-advisories/sophos-sa-20261118-java4shell",
+      "date": "18 Nov"
+    },
+    {
+      "title": "Qualys: fixed builds",
+      "url": "https://blog.qualys.com/vulnerabilities-threat-research/2026/11/17/how-to-find-mitigate-and-patch-the-critical-java4shell-flaw-cve-2026-114938-now"
+    },
+    {
+      "title": "Orca: early doubts about Oracle's release notes",
+      "url": "https://orca.security/resources/research/java4shell-critical-openjdk-base64-decoder-flaw-could-allow-unauthenticated-remote-code-execution/"
+    },
+    {
+      "title": "Sonatype: version range unconfirmed",
+      "url": "https://www.sonatype.com/blog/critical-openjdk-rce-cve-2026-114938-what-to-know"
+    },
+    {
+      "title": "SOC Prime: products demonstrated",
+      "url": "https://socprime.com/blog/cve-2026-114938-java4shell-flaw-enables-pre-auth-rce-in-major-java-applications/"
+    },
+    {
+      "title": "TuxCare: workaround",
+      "url": "https://tuxcare.com/blog/java4shell-cve-2026-114938/"
+    },
+    {
+      "title": "CISA: patch-now alert",
+      "url": "https://www.cisa.gov/news-events/alerts/2026/11/17/critical-java-vulnerability-requires-immediate-patching",
+      "date": "17 Nov"
+    },
+    {
+      "title": "Field Effect: Java 8/11 not affected",
+      "url": "https://fieldeffect.com/blog/java4shell-exposure-concerns"
+    },
+    {
+      "title": "CVE record (Oracle): affected and fixed Oracle builds",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-114938"
+    },
+    {
+      "title": "Red Hat: CVE page, RHEL fixes 18–19 Nov",
+      "url": "https://access.redhat.com/security/cve/CVE-2026-114938",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Adoptium: Temurin November release includes the fix",
+      "url": "https://adoptium.net/news/2026/11/temurin-november-2026-cspu-java4shell",
+      "date": "18 Nov"
+    },
+    {
+      "title": "Adoptium: Temurin publishing status per platform",
+      "url": "https://github.com/adoptium/temurin/issues/326",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Corretto 21.0.13.1.2 changelog: lists the CVE",
+      "url": "https://github.com/corretto/corretto-21/blob/21.0.13.1.2/CHANGELOG.md",
+      "date": "17 Nov"
+    },
+    {
+      "title": "Oracle: JDK 17.0.21.1 release notes",
+      "url": "https://www.oracle.com/java/technologies/javase/17-0-21-1-relnotes.html",
+      "date": "17 Nov"
+    },
+    {
+      "title": "OpenJDK Vulnerability Group: advisory, affects 17, 21, 25, 27",
+      "url": "https://openjdk.org/groups/vulnerability/advisories/2026-11-17",
+      "date": "17 Nov"
+    },
+    {
+      "title": "Ubuntu: fixed openjdk packages",
+      "url": "https://ubuntu.com/security/CVE-2026-114938"
+    },
+    {
+      "title": "Debian tracker: fixed openjdk packages",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-114938"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Corretto, Ubuntu and Debian fixes out; Temurin Windows and Docker images still pending. Oracle fixed builds now cited to Oracle. Safe versions added."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Review: Oracle's own fixed builds, Red Hat and Temurin fixes, GraalVM; 'disputed' note removed."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Added the CISA alert and Oracle's Java 8 Performance Pack exception."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Added fix status."
+    },
+    {
+      "date": "2026-11-17",
+      "text": "Published."
+    }
+  ],
+  "status": {
+    "exploit": "demonstrated",
+    "attacks": "none",
+    "kev": null,
+    "cisa_alert": true,
+    "scare": 2.3,
+    "no_login": true
+  },
+  "status_cite": {
+    "no_login": [
+      9,
+      7
+    ],
+    "exploit": [
+      1,
+      7
+    ],
+    "attacks": [
+      3
+    ],
+    "kev": [
+      9,
+      8
+    ]
+  }
+}

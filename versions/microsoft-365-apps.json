@@ -1,0 +1,66 @@
+{
+  "id": "microsoft-365-apps",
+  "name": "Microsoft 365 Apps",
+  "about": "The newest release on each Microsoft 365 Apps line we track. Each one fixes every Microsoft 365 Apps bug we cover.",
+  "feed": null,
+  "filter": "outlook",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "Current Channel",
+      "key": "Current Channel",
+      "latest": "2611 (20625.20108)"
+    },
+    {
+      "line": "Monthly Enterprise 2610",
+      "key": "Monthly Enterprise 2610",
+      "latest": "20527.20194"
+    },
+    {
+      "line": "Monthly Enterprise 2609",
+      "key": "Monthly Enterprise 2609",
+      "latest": "20430.20264"
+    },
+    {
+      "line": "Monthly Enterprise 2608",
+      "key": "Monthly Enterprise 2608",
+      "latest": "20326.20320"
+    },
+    {
+      "line": "Semi-Annual 2610",
+      "key": "Semi-Annual 2610",
+      "latest": "20527.20192"
+    },
+    {
+      "line": "Semi-Annual 2609",
+      "key": "Semi-Annual 2609",
+      "latest": "20430.20262"
+    },
+    {
+      "line": "Semi-Annual 2608",
+      "key": "Semi-Annual 2608",
+      "latest": "20326.20318"
+    },
+    {
+      "line": "LTSC 2024",
+      "key": "LTSC 2024",
+      "latest": "17932.21140"
+    },
+    {
+      "line": "LTSC 2021",
+      "key": "LTSC 2021",
+      "latest": "14334.21048"
+    }
+  ],
+  "older": "Current Channel 2611's notes list no security fixes; it's newer than the fixed 2610 build.",
+  "sources": [
+    {
+      "title": "Microsoft Learn: Office security update builds",
+      "url": "https://learn.microsoft.com/en-us/officeupdates/microsoft365-apps-security-updates"
+    },
+    {
+      "title": "Microsoft Learn: Microsoft 365 Apps update history",
+      "url": "https://learn.microsoft.com/en-us/officeupdates/update-history-microsoft365-apps-by-date"
+    }
+  ]
+}

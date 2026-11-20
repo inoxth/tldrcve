@@ -1,0 +1,43 @@
+{
+  "id": "chromium-browsers",
+  "name": "Edge, Brave and Opera",
+  "about": "The newest release on each Edge, Brave and Opera line we track. Each one fixes every Edge, Brave and Opera bug we cover.",
+  "feed": null,
+  "filter": "chromium",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "Edge",
+      "key": "edge",
+      "latest": "158.0.4370.33"
+    },
+    {
+      "line": "Brave",
+      "key": "brave",
+      "latest": "1.100.58"
+    },
+    {
+      "line": "Opera 140",
+      "key": "opera",
+      "latest": "140.0.6074.36"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Microsoft: Edge security release notes",
+      "url": "https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnotes-security"
+    },
+    {
+      "title": "Brave: 1.99.56 on Chromium 157.0.8103.50",
+      "url": "https://github.com/brave/brave-browser/releases/tag/v1.99.56"
+    },
+    {
+      "title": "Brave: releases",
+      "url": "https://github.com/brave/brave-browser/releases"
+    },
+    {
+      "title": "Opera: changelog for 140, CVE cherry-pick",
+      "url": "https://blogs.opera.com/desktop/changelog-for-140/"
+    }
+  ]
+}

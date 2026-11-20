@@ -1,0 +1,193 @@
+{
+  "slug": "php-sessions",
+  "name": "PHP session RCE",
+  "aliases": [
+    "php",
+    "php-fpm",
+    "mod_php",
+    "session.upload_progress",
+    "session.serialize_handler",
+    "php_serialize",
+    "php_binary",
+    "php2shell",
+    "cve-2026-115560"
+  ],
+  "cves": [
+    "CVE-2026-115560"
+  ],
+  "ghsa": [
+    "GHSA-658j-r8rw-q6mx"
+  ],
+  "product": "PHP",
+  "disclosed": "2026-10-23",
+  "updated": "2026-11-20",
+  "verdict": "if",
+  "tile_line": "Only with mixed session serializers. Fixed 19 Nov.",
+  "summary": "PHP's session upload-progress feature can let an attacker with no login run code, but only where sessions are written with one serializer and read with another, and the app has a suitable code library. PHP rates it Critical; exploit code for a test lab is public, and the 19 Nov 2026 releases fix it. It's a sibling of PHP2Shell (CVE-2026-109618/109619).",
+  "status": {
+    "exploit": "public",
+    "attacks": "none",
+    "kev": null,
+    "no_login": true,
+    "scare": 2.5
+  },
+  "affected": [
+    {
+      "label": "PHP older than the 19 Nov 2026 fix",
+      "text": "PHP 8.2 to 8.5 below 8.5.13, 8.4.28, 8.3.37 or 8.2.36. PHP 8.6.0 (19 Nov) is fixed. The 21 Oct releases didn't fix this bug. Older, unsupported PHP may also be affected. Distros may backport the fix without changing the version number.",
+      "cmd": "php -v",
+      "cite": [
+        1,
+        2,
+        7
+      ]
+    },
+    {
+      "label": "Session upload progress is on",
+      "text": "In anything that can write to your session store. It was on by default before the fix; the fix turns it off by default, but an explicit setting in php.ini or a pool still wins. The CLI can read a different php.ini than PHP-FPM or Apache.",
+      "cmd": "php -i | grep session.upload_progress.enabled",
+      "cite": [
+        1,
+        4
+      ]
+    },
+    {
+      "label": "Two serializers share sessions",
+      "text": "Something writes sessions with `php_binary` or `php_serialize` while something else reads the same sessions with `php`. For example, an app calls ini_set() before session_start(), or two apps, FPM pools, virtual hosts or CLI jobs with different settings share a session directory. PHP's 23 Oct notice described only the first case; the 19 Nov advisory says no runtime switch is needed.",
+      "cmd": "php -i | grep session.serialize_handler",
+      "cite": [
+        1,
+        3
+      ]
+    },
+    {
+      "label": "The reader has a usable library",
+      "text": "Code execution needs a suitable \"gadget chain\" in the reading app. PHP's advisory demonstrates it with Guzzle and Monolog, both common in Composer apps. Without one, the bug can still corrupt sessions or crash requests.",
+      "cite": [
+        1
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update PHP and restart",
+      "text": "Update to 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov 2026), then restart every PHP worker. Debian has fixed packages (DSA-6641-1, DLA-4916-1); Ubuntu hadn't shipped one by 20 Nov. The fix turns session upload progress off by default and blocks runtime changes to session settings while it's on.",
+      "cite": [
+        1,
+        2,
+        7,
+        9,
+        10
+      ],
+      "versions": [
+        "php"
+      ]
+    },
+    {
+      "label": "Keep upload progress off",
+      "text": "Set it in php.ini, the FPM pool or server config, not with `ini_set()` (that's too late), then restart. Check that nothing explicitly turns it back on.",
+      "cmd": "session.upload_progress.enabled = 0",
+      "cite": [
+        1,
+        4
+      ]
+    },
+    {
+      "label": "If you need upload progress",
+      "text": "Every app, pool and job that reads those sessions must use the same `serialize_handler`, even after updating. Otherwise give each app its own session storage, and expire old sessions when you change formats.",
+      "cite": [
+        1
+      ]
+    }
+  ],
+  "fixed_in": {
+    "php": {
+      "8.6": "8.6.0",
+      "8.5": "8.5.13",
+      "8.4": "8.4.28",
+      "8.3": "8.3.37",
+      "8.2": "8.2.36"
+    }
+  },
+  "slack": "PHP CVE-2026-115560 (session serializer mismatch, sibling of PHP2Shell): no-login code execution where sessions are written with php_binary/php_serialize and read with php (an ini_set() switch, or apps/pools sharing a session store), with session upload progress on and a usable library such as Guzzle or Monolog. PHP rates it Critical; exploit code for a test lab is public, no attacks reported. Fixed in 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov 2026). Stopgap: session.upload_progress.enabled = 0.",
+  "sources": [
+    {
+      "title": "PHP GHSA-658j: full advisory, conditions, demonstrated exploit",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-658j-r8rw-q6mx",
+      "date": "19 Nov"
+    },
+    {
+      "title": "PHP: 8.x ChangeLog, 19 Nov 2026 releases",
+      "url": "https://www.php.net/ChangeLog-8.php#8.5.13",
+      "date": "19 Nov"
+    },
+    {
+      "title": "PHP: 23 Oct notice (described only the runtime-switch case)",
+      "url": "https://www.php.net/archive/2026.php#2026-10-23-1",
+      "date": "23 Oct"
+    },
+    {
+      "title": "PHP manual: session setting defaults",
+      "url": "https://www.php.net/manual/en/session.configuration.php"
+    },
+    {
+      "title": "BleepingComputer: mitigation, no attacks reported",
+      "url": "https://bleepingcomputer.com/news/security/php-shares-mitigation-for-new-and-unpatched-rce-vulnerability"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "PHP: 8.6.0 ChangeLog, fixes GHSA-658j",
+      "url": "https://www.php.net/ChangeLog-8.php#8.6.0",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Public exploit for a test lab (planted gadget class)",
+      "url": "https://github.com/googlesky/CVE-2026-115560",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Debian tracker: DSA-6641-1, DLA-4916-1",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-115560"
+    },
+    {
+      "title": "Ubuntu: CVE tracker, needs triage",
+      "url": "https://ubuntu.com/security/CVE-2026-115560"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "PHP 8.6.0 added. A public exploit for a test lab is out (uses a planted gadget class): exploit status set to public. Debian packages out. Safe versions added."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Rewritten after PHP's full advisory: no runtime switch needed, exploit demonstrated, verdict raised to Patch now if…"
+    },
+    {
+      "date": "2026-11-19",
+      "text": "PHP released the fix: 8.5.13, 8.4.28, 8.3.37 or 8.2.36."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "no_login": [
+      1
+    ],
+    "exploit": [
+      1,
+      8
+    ],
+    "attacks": [
+      5
+    ],
+    "kev": [
+      6
+    ]
+  }
+}

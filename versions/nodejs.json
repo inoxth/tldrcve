@@ -1,0 +1,49 @@
+{
+  "id": "nodejs",
+  "name": "Node.js",
+  "about": "The newest release on each Node.js line we track. Each one fixes every Node.js bug we cover.",
+  "feed": "nodejs",
+  "filter": "node",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "26",
+      "key": "26",
+      "latest": "26.13.1"
+    },
+    {
+      "line": "24",
+      "key": "24",
+      "latest": "24.22.3"
+    },
+    {
+      "line": "22",
+      "key": "22",
+      "latest": "22.23.5"
+    }
+  ],
+  "older": "Node.js 20, 23 and 25 get no fix: move to a supported line.",
+  "unfixed": [
+    {
+      "line": "20, 23 and 25",
+      "note": "End of life: no fixed release.",
+      "pages": [
+        "brotli"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Node.js: October 2026 security releases",
+      "url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases"
+    },
+    {
+      "title": "Node.js: release index",
+      "url": "https://nodejs.org/dist/index.json"
+    },
+    {
+      "title": "Node.js: November 2026 security releases",
+      "url": "https://nodejs.org/en/blog/vulnerability/november-2026-security-releases"
+    }
+  ]
+}

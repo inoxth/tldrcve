@@ -1,0 +1,65 @@
+{
+  "id": "openssh",
+  "name": "OpenSSH",
+  "about": "The newest release on each OpenSSH line we track. Each one fixes every OpenSSH bug we cover.",
+  "feed": null,
+  "filter": "openssh",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "Upstream",
+      "key": "upstream",
+      "latest": "10.6p2"
+    },
+    {
+      "line": "Alpine edge",
+      "key": "alpine-edge",
+      "latest": "10.6_p2-r0"
+    },
+    {
+      "line": "Alpine 3.24",
+      "key": "alpine-3.24",
+      "latest": "10.3_p1-r2"
+    },
+    {
+      "line": "Alpine 3.23",
+      "key": "alpine-3.23",
+      "latest": "10.2_p1-r1"
+    },
+    {
+      "line": "Alpine 3.22",
+      "key": "alpine-3.22",
+      "latest": "10.0_p1-r11"
+    },
+    {
+      "line": "Alpine 3.21",
+      "key": "alpine-3.21",
+      "latest": "9.9_p2-r1"
+    },
+    {
+      "line": "Alpine 3.20",
+      "key": "alpine-3.20",
+      "latest": "9.7_p1-r6"
+    },
+    {
+      "line": "Alpine 3.19",
+      "key": "alpine-3.19",
+      "latest": "9.6_p1-r3"
+    }
+  ],
+  "older": "Alpine 3.16 to 3.18 are fixed too: 9.0_p1-r6, 9.1_p1-r7, 9.3_p2-r4.",
+  "sources": [
+    {
+      "title": "OpenSSH: 10.6p2 release notes",
+      "url": "https://www.openssh.org/releasenotes.html"
+    },
+    {
+      "title": "Alpine: advisory, conditions, fixed packages",
+      "url": "https://alpinelinux.org/posts/2026-11-05-openssh-password-authentication-bypass/"
+    },
+    {
+      "title": "Alpine packages: current openssh per branch",
+      "url": "https://pkgs.alpinelinux.org/packages?name=openssh&repo=main&arch=x86_64"
+    }
+  ]
+}

@@ -1,0 +1,34 @@
+{
+  "id": "brotli-python",
+  "name": "Brotli for Python",
+  "about": "The newest release on each Brotli for Python line we track. Each one fixes every Brotli for Python bug we cover.",
+  "feed": null,
+  "filter": "brotli",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "Brotli",
+      "key": "Brotli",
+      "latest": "1.2.1"
+    },
+    {
+      "line": "brotlicffi",
+      "key": "brotlicffi",
+      "latest": "1.2.1.0"
+    }
+  ],
+  "sources": [
+    {
+      "title": "google/brotli: fixed releases",
+      "url": "https://github.com/google/brotli/releases"
+    },
+    {
+      "title": "PyPI: Brotli",
+      "url": "https://pypi.org/project/Brotli/"
+    },
+    {
+      "title": "PyPI: brotlicffi",
+      "url": "https://pypi.org/project/brotlicffi/"
+    }
+  ]
+}

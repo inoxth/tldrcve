@@ -1,0 +1,24 @@
+{
+  "id": "apache-axis",
+  "name": "Apache Axis 1.x",
+  "about": "There is no fixed Apache Axis 1.x release yet. Keep it off untrusted networks and follow the steps on each bug's page.",
+  "feed": null,
+  "filter": "axis",
+  "checked": "2026-11-20",
+  "lines": [],
+  "unfixed": [
+    {
+      "line": "1.x (through 1.4)",
+      "note": "No fixed release; Apache doesn't expect one, only a patch commit.",
+      "pages": [
+        "4everable2shell"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "NVD: CVE-2026-90436, Axis 1.x through 1.4, no fix release",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-90436"
+    }
+  ]
+}

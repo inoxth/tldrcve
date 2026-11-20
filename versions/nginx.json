@@ -1,0 +1,33 @@
+{
+  "id": "nginx",
+  "name": "nginx",
+  "about": "The newest open-source nginx release on each line. Each one fixes every nginx bug we cover.",
+  "feed": "endoflife:nginx",
+  "filter": "nginx",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "1.31 (mainline)",
+      "key": "1.31",
+      "latest": "1.31.9",
+      "released": "2026-11-18"
+    },
+    {
+      "line": "1.30 (stable)",
+      "key": "1.30",
+      "latest": "1.30.7",
+      "released": "2026-11-18"
+    }
+  ],
+  "older": "Older nginx lines get no fixes. NGINX Plus is listed separately, and products that bundle nginx have their own versions.",
+  "sources": [
+    {
+      "title": "nginx.org: CHANGES",
+      "url": "https://nginx.org/en/CHANGES"
+    },
+    {
+      "title": "nginx.org: download",
+      "url": "https://nginx.org/en/download.html"
+    }
+  ]
+}

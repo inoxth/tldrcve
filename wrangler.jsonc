@@ -1,0 +1,17 @@
+// Cloudflare Workers config: serves the built site/ folder as static files. No server code.
+// Static asset requests are free and unlimited on Cloudflare.
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "tldrcve",
+  "compatibility_date": "2026-11-18",
+  "assets": {
+    "directory": "site",
+    "not_found_handling": "404-page"
+  },
+  // Served only on our own domain.
+  "workers_dev": false,
+  "preview_urls": false,
+  "routes": [
+    { "pattern": "tldrcve.com", "custom_domain": true }
+  ]
+}

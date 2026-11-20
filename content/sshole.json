@@ -1,0 +1,203 @@
+{
+  "slug": "sshole",
+  "name": "SSHole",
+  "aliases": [
+    "openssh",
+    "sshd",
+    "ssh",
+    "*sshole",
+    "alpine",
+    "alpine linux",
+    "musl",
+    "openssh-server"
+  ],
+  "cves": [
+    "CVE-2026-123158"
+  ],
+  "product": "OpenSSH",
+  "disclosed": "2026-11-05",
+  "updated": "2026-11-20",
+  "verdict": "now",
+  "tile_line": "Exploited, in CISA KEV. Alpine-style sshd only.",
+  "summary": "On Linux systems that use musl libc and run sshd without PAM, mainly Alpine, an attacker can log in to password-less accounts (key-only users, Alpine's cloud `alpine` user) just by sending a very long password. Attacks started within hours of disclosure on 5 Nov 2026. Debian, Ubuntu, Fedora and other glibc systems aren't affected.",
+  "affected": [
+    {
+      "label": "sshd uses musl libc",
+      "text": "Alpine and other musl-based systems, including Alpine containers that run sshd. glibc systems (Debian, Ubuntu, Fedora, RHEL) and Dropbear are not affected. A line with `ld-musl` means musl.",
+      "cmd": "ldd \"$(command -v sshd)\" | grep -i musl",
+      "cite": [
+        2,
+        5,
+        7
+      ]
+    },
+    {
+      "label": "PAM off, password login on",
+      "text": "Alpine's `openssh-server` is built without PAM, so `sshd -T` prints no `usepam` line. `openssh-server-pam` with `UsePAM yes` is safe. `passwordauthentication yes` is the default. Run as root.",
+      "cmd": "sshd -T | grep -Ei '^(passwordauthentication|usepam|permitrootlogin) '",
+      "cite": [
+        1,
+        2,
+        8
+      ]
+    },
+    {
+      "label": "A `*` account plus a real hash",
+      "text": "Some account has `*` as its password (key-only users, `root` since about Alpine 3.16 if `PermitRootLogin yes`, the `alpine` user in cloud images 3.18.11–3.24.3) and at least one account has a `$5$` or `$6$` hash. Directory-service users (nslcd, winbind, sssd) with no shadow entry also count, and the commands below miss them. Locked `!` accounts are safe. Run as root; the second command counts real hashes.",
+      "cmd": "awk -F: '$2==\"*\"{print $1}' /etc/shadow; grep -cE '^[^:]*:\\$[56]\\$' /etc/shadow",
+      "cite": [
+        2
+      ]
+    },
+    {
+      "label": "openssh below the fixed package",
+      "text": "Upstream: OpenSSH before 10.6p2. Alpine's fixed packages are listed under Upgrade.",
+      "cmd": "apk info -v | grep '^openssh'",
+      "cite": [
+        9,
+        2
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Upgrade openssh, then restart",
+      "text": "Install the fixed package for your Alpine branch (listed below; fixes go back to 3.16). Run `apk upgrade -U -a`, then `rc-service sshd restart`: upgrading alone leaves the old sshd running. Other musl builds: OpenSSH 10.6p2.",
+      "cite": [
+        1,
+        2,
+        3
+      ],
+      "versions": [
+        "openssh"
+      ]
+    },
+    {
+      "label": "Can't upgrade? Turn off passwords",
+      "text": "In `sshd_config` (or a drop-in in `/etc/ssh/sshd_config.d/` on Alpine 3.19+). Also set any `PasswordAuthentication yes` inside `Match` blocks to no; a drop-in doesn't override those. Check key login works, validate with `sshd -t`, then restart sshd and confirm `sshd -T` shows `passwordauthentication no`.",
+      "cmd": "PasswordAuthentication no",
+      "cite": [
+        2
+      ]
+    },
+    {
+      "label": "Look for break-ins",
+      "text": "A password login for `root`, `alpine` or any key-only user is a red flag. Also review `doas` use, new users, new `authorized_keys` entries and changed files. If you can't rule out a login, treat the host as compromised. US federal agencies must also do forensic triage under the KEV listing.",
+      "cmd": "grep 'Accepted password for' /var/log/messages",
+      "cite": [
+        2,
+        4
+      ]
+    }
+  ],
+  "fixed_in": {
+    "openssh": {
+      "upstream": "10.6p2",
+      "alpine-edge": "10.6_p2-r0",
+      "alpine-3.24": "10.3_p1-r2",
+      "alpine-3.23": "10.2_p1-r1",
+      "alpine-3.22": "10.0_p1-r11",
+      "alpine-3.21": "9.9_p2-r1",
+      "alpine-3.20": "9.7_p1-r6",
+      "alpine-3.19": "9.6_p1-r3"
+    }
+  },
+  "slack": "SSHole (CVE-2026-123158): password-auth bypass in OpenSSH sshd on musl systems without PAM, mainly Alpine. A very long password (257–1024 bytes per Alpine; the CVE record says 256–1024) logs into accounts with no password (key-only users, Alpine's cloud `alpine` user). Exploited within hours of the 5 Nov disclosure, public PoC, in CISA KEV (added 9 Nov, due 12 Nov). glibc distros (Debian, Ubuntu, RHEL) are not affected. Fix: upgrade Alpine's openssh package (or OpenSSH 10.6p2) and restart sshd, or set PasswordAuthentication no. Check logs for 'Accepted password for' on passwordless accounts.",
+  "sources": [
+    {
+      "title": "OpenSSH: 10.6p2 release notes",
+      "url": "https://www.openssh.org/releasenotes.html",
+      "date": "5 Nov"
+    },
+    {
+      "title": "Alpine: advisory, conditions, fixed packages",
+      "url": "https://alpinelinux.org/posts/2026-11-05-openssh-password-authentication-bypass/",
+      "date": "5 Nov"
+    },
+    {
+      "title": "Alpine security tracker: fixed versions",
+      "url": "https://security.alpinelinux.org/vuln/CVE-2026-123158"
+    },
+    {
+      "title": "CISA KEV: added 9 Nov, due 12 Nov",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "date": "9 Nov"
+    },
+    {
+      "title": "CSO Online: how it works, who's affected",
+      "url": "https://www.csoonline.com/article/4245407/open-ssh-flaw-lets-attackers-access-password-disabled-accounts-on-some-linux-systems.html",
+      "date": "5 Nov"
+    },
+    {
+      "title": "Help Net Security: exploited within hours",
+      "url": "https://www.helpnetsecurity.com/2026/11/06/openssh-sshole-cve-2026-123158-exploitation/",
+      "date": "6 Nov"
+    },
+    {
+      "title": "Researcher: checker script and PoC",
+      "url": "https://github.com/oz9un/sshole"
+    },
+    {
+      "title": "openssh-portable: sshd -T shows usepam only with PAM",
+      "url": "https://github.com/openssh/openssh-portable/blob/master/servconf.c"
+    },
+    {
+      "title": "CVE record: OpenSSH before 10.6p2, 256–1024 chars",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-123158"
+    },
+    {
+      "title": "Alpine packages: current openssh per branch",
+      "url": "https://pkgs.alpinelinux.org/packages?name=openssh&repo=main&arch=x86_64"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Dropped a conflicting Alpine 3.19 tracker version (the package index matches the advisory). Safe versions added."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Review: directory-service accounts, Match blocks, and the CVE record's version and length range added."
+    },
+    {
+      "date": "2026-11-09",
+      "text": "Added to CISA KEV, due 12 Nov."
+    },
+    {
+      "date": "2026-11-06",
+      "text": "Attacks seen within hours of the fix."
+    },
+    {
+      "date": "2026-11-05",
+      "text": "Published."
+    }
+  ],
+  "status": {
+    "exploit": "public",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-11-09",
+      "due": "2026-11-12"
+    },
+    "no_login": true,
+    "scare": 3.3
+  },
+  "also_in": [
+    "Alpine"
+  ],
+  "status_cite": {
+    "no_login": [
+      2,
+      5
+    ],
+    "exploit": [
+      7
+    ],
+    "attacks": [
+      6
+    ],
+    "kev": [
+      4
+    ]
+  }
+}

@@ -1,0 +1,61 @@
+{
+  "id": "chrome",
+  "name": "Chrome",
+  "about": "The newest release on each Chrome line we track. Each one fixes every Chrome bug we cover.",
+  "feed": null,
+  "filter": "chrome",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "158",
+      "key": "158",
+      "latest": "158.0.8127.36"
+    },
+    {
+      "line": "157",
+      "key": "157",
+      "latest": "157.0.8103.78"
+    },
+    {
+      "line": "Extended Stable 156",
+      "key": "156",
+      "latest": "156.0.8078.108"
+    },
+    {
+      "line": "ChromeOS",
+      "key": "chromeos",
+      "latest": "158.0.8127.65"
+    }
+  ],
+  "older": "Chrome for Android: 157.0.8103.50 or later.",
+  "sources": [
+    {
+      "title": "Chrome Releases: Stable fix, exploit in the wild",
+      "url": "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_018223192.html"
+    },
+    {
+      "title": "Chrome Releases: Stable 158.0.8127.36",
+      "url": "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_01699533288.html"
+    },
+    {
+      "title": "Chrome Releases: Stable 157.0.8103.78",
+      "url": "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_01744469280.html"
+    },
+    {
+      "title": "Chrome Releases: Extended Stable 156.0.8078.96",
+      "url": "https://chromereleases.googleblog.com/2026/11/extended-stable-update-for-desktop_0910980127.html"
+    },
+    {
+      "title": "Chrome Releases: Extended Stable 156.0.8078.108",
+      "url": "https://chromereleases.googleblog.com/2026/11/extended-stable-update-for-desktop_01061812727.html"
+    },
+    {
+      "title": "Chrome Releases: ChromeOS 156.0.8078.102",
+      "url": "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-chromeos_01089491269.html"
+    },
+    {
+      "title": "Chrome Releases: ChromeOS 158.0.8127.65 lists the CVE",
+      "url": "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-chromeos_01891834105.html"
+    }
+  ]
+}

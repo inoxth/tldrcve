@@ -1,0 +1,82 @@
+{
+  "id": "linux-kernel",
+  "name": "Linux kernel",
+  "about": "The newest release on each Linux kernel line we track. Each one fixes every Linux kernel bug we cover.",
+  "feed": null,
+  "filter": "linux",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "Debian 13",
+      "key": "Debian 13",
+      "latest": "6.12.117-1"
+    },
+    {
+      "line": "Debian 12",
+      "key": "Debian 12",
+      "latest": "6.1.192-2"
+    },
+    {
+      "line": "Ubuntu 26.04",
+      "key": "Ubuntu 26.04",
+      "latest": "7.0.0-44.44"
+    },
+    {
+      "line": "Ubuntu 24.04",
+      "key": "Ubuntu 24.04",
+      "latest": "6.8.0-151.151"
+    },
+    {
+      "line": "Ubuntu 22.04",
+      "key": "Ubuntu 22.04",
+      "latest": "5.15.0-204.214"
+    },
+    {
+      "line": "RHEL 10.3",
+      "key": "RHEL 10.3",
+      "latest": "6.12.0-264.16.1.el10_3"
+    },
+    {
+      "line": "RHEL 10.2",
+      "key": "RHEL 10.2",
+      "latest": "6.12.0-211.75.1.el10_2"
+    },
+    {
+      "line": "RHEL 9",
+      "key": "RHEL 9",
+      "latest": "5.14.0-687.67.1.el9_8"
+    },
+    {
+      "line": "RHEL 8",
+      "key": "RHEL 8",
+      "latest": "4.18.0-553.186.1.el8_10"
+    }
+  ],
+  "older": "Ubuntu 26.10: 7.3.0-10.10. Cloud and HWE kernels have their own versions.",
+  "sources": [
+    {
+      "title": "Debian tracker: fixed versions",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-98432"
+    },
+    {
+      "title": "Debian tracker: linux package versions",
+      "url": "https://security-tracker.debian.org/tracker/source-package/linux"
+    },
+    {
+      "title": "Ubuntu: fixed versions, firewall stopgap",
+      "url": "https://ubuntu.com/security/CVE-2026-98432"
+    },
+    {
+      "title": "Launchpad: Ubuntu kernel builds",
+      "url": "https://launchpad.net/ubuntu/+source/linux"
+    },
+    {
+      "title": "Red Hat: CVE page, RHEL errata",
+      "url": "https://access.redhat.com/security/cve/CVE-2026-98432"
+    },
+    {
+      "title": "Red Hat: kernel errata (CSAF)",
+      "url": "https://access.redhat.com/hydra/rest/securitydata/csaf.json?package=kernel"
+    }
+  ]
+}

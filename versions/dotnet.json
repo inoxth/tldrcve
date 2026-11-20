@@ -1,0 +1,45 @@
+{
+  "id": "dotnet",
+  "name": ".NET",
+  "about": "The newest release on each .NET line we track. Each one fixes every .NET bug we cover.",
+  "feed": null,
+  "filter": ".net",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "11",
+      "key": "11",
+      "latest": "11.0.0"
+    },
+    {
+      "line": "10",
+      "key": "10",
+      "latest": "10.0.15"
+    },
+    {
+      "line": "9 (end of life)",
+      "key": "9",
+      "latest": "9.0.23"
+    },
+    {
+      "line": "8 (end of life)",
+      "key": "8",
+      "latest": "8.0.34"
+    }
+  ],
+  "older": ".NET 8 and 9 reached end of life on 10 Nov 2026: plan the move to 10 or 11.",
+  "sources": [
+    {
+      "title": "Microsoft: .NET out-of-band updates",
+      "url": "https://devblogs.microsoft.com/dotnet/dotnet-october-2026-oob-security-updates/"
+    },
+    {
+      "title": ".NET 9 release metadata: end of life 10 Nov 2026",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json"
+    },
+    {
+      "title": ".NET 8 release metadata: end of life 10 Nov 2026",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json"
+    }
+  ]
+}

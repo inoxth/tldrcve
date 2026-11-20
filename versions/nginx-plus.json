@@ -1,0 +1,26 @@
+{
+  "id": "nginx-plus",
+  "name": "NGINX Plus",
+  "about": "The newest release on each NGINX Plus line we track. Each one fixes every NGINX Plus bug we cover.",
+  "feed": null,
+  "filter": "nginx plus",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "37.x (CR)",
+      "key": "37.x",
+      "latest": "37.3.0.1"
+    },
+    {
+      "line": "37.0 (LTS)",
+      "key": "37.0",
+      "latest": "37.0.8.1"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Rapid7: NGINX Plus versions, exploit limits",
+      "url": "https://www.rapid7.com/blog/post/ve-cve-2026-123007-critical-nginx-http-2-integer-underflow-leads-to-rce-fixed/"
+    }
+  ]
+}

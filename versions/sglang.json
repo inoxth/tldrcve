@@ -1,0 +1,28 @@
+{
+  "id": "sglang",
+  "name": "SGLang",
+  "about": "There is no fixed SGLang release yet. Keep it off untrusted networks and follow the steps on each bug's page.",
+  "feed": null,
+  "filter": "sglang",
+  "checked": "2026-11-20",
+  "lines": [],
+  "unfixed": [
+    {
+      "line": "All versions",
+      "note": "No release fixes these CVEs yet (newest is 0.5.23). Partial fixes are merged but unreleased.",
+      "pages": [
+        "sglang"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "CERT/CC VU#281278: no patches",
+      "url": "https://kb.cert.org/vuls/id/281278"
+    },
+    {
+      "title": "SGLang GitHub: releases",
+      "url": "https://github.com/sgl-project/sglang/releases"
+    }
+  ]
+}

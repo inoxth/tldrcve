@@ -1,0 +1,48 @@
+{
+  "id": "ruby",
+  "name": "Ruby",
+  "about": "The newest release on each supported Ruby line. Each one fixes every Ruby bug we cover.",
+  "feed": "endoflife:ruby",
+  "filter": "ruby",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "4.0",
+      "key": "4.0",
+      "latest": "4.0.10",
+      "released": "2026-11-18"
+    },
+    {
+      "line": "3.4",
+      "key": "3.4",
+      "latest": "3.4.13",
+      "released": "2026-11-18"
+    },
+    {
+      "line": "3.3",
+      "key": "3.3",
+      "latest": "3.3.14",
+      "released": "2026-11-18"
+    }
+  ],
+  "older": "Ruby 3.2 and older are end of life and get no fixes. Apps like GitLab bundle their own Ruby.",
+  "unfixed": [
+    {
+      "line": "3.2 and older",
+      "note": "End of life: Ruby ships no fixes.",
+      "pages": [
+        "ruby2shell"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "ruby-lang.org: release index",
+      "url": "https://cache.ruby-lang.org/pub/ruby/index.txt"
+    },
+    {
+      "title": "ruby-lang.org: 18 Nov 2026 security releases",
+      "url": "https://www.ruby-lang.org/en/news/2026/11/18/multiple-vulnerabilities-in-regexp-and-string/"
+    }
+  ]
+}

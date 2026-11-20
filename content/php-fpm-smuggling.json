@@ -1,0 +1,176 @@
+{
+  "slug": "php-fpm-smuggling",
+  "name": "PHP-FPM smuggling",
+  "aliases": [
+    "php",
+    "php-fpm",
+    "fastcgi",
+    "fastcgi_keep_conn",
+    "enablereuse",
+    "mod_proxy_fcgi",
+    "request smuggling",
+    "lsapi",
+    "cve-2026-129289"
+  ],
+  "cves": [
+    "CVE-2026-129289"
+  ],
+  "ghsa": [
+    "GHSA-qc49-hpvq-g2w6"
+  ],
+  "product": "PHP",
+  "disclosed": "2026-11-19",
+  "updated": "2026-11-20",
+  "verdict": "if",
+  "tile_line": "Only if FastCGI connections are reused. Fixed 19 Nov.",
+  "summary": "A bug in PHP-FPM can let an attacker with no login sneak a second, hidden request to PHP in one web request and run their own code. It only works where the web server reuses its connections to PHP-FPM (off by default in nginx and Apache) and the app opens the request body without reading all of it. PHP rates it Critical (CVSS 9.2); public test code runs PHP on a target, and the 19 Nov 2026 releases fix it.",
+  "status": {
+    "exploit": "public",
+    "attacks": "none",
+    "kev": null,
+    "no_login": true,
+    "scare": 2.5
+  },
+  "affected": [
+    {
+      "label": "PHP-FPM older than the 19 Nov 2026 fix",
+      "text": "Below 8.5.13, 8.4.28, 8.3.37 or 8.2.36. PHP 8.6.0 (19 Nov) is fixed. PHP says the bug has been in the code since 5.6.0, so older, unsupported PHP is affected too. The code-execution attack needs PHP-FPM; with LiteSpeed's LSAPI it only breaks later requests. Distros may backport the fix without changing the version number.",
+      "cmd": "php-fpm -v",
+      "cite": [
+        1,
+        2,
+        3,
+        10
+      ]
+    },
+    {
+      "label": "The web server reuses FPM connections",
+      "text": "nginx with `fastcgi_keep_conn on`, Apache `mod_proxy_fcgi` with `enablereuse=on`, or HAProxy keeping FastCGI connections open. Both nginx and Apache close the connection by default, which is not affected, but Apache's own PHP-FPM example turns reuse on. PHP's advisory doesn't mention Caddy. For Apache, look for `enablereuse=on` in your config.",
+      "cmd": "nginx -T 2>/dev/null | grep fastcgi_keep_conn",
+      "cite": [
+        1,
+        4,
+        5
+      ]
+    },
+    {
+      "label": "The app leaves the body unread",
+      "text": "Some code path opens `php://input` and doesn't read it to the end. PHP says frameworks that open the input stream before routing or login checks can be affected; public test code worked against an unmodified Slim 4 app. Reading the body fully avoids it, but PHP says that isn't reliable on its own.",
+      "cite": [
+        1,
+        6
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update PHP and restart FPM",
+      "text": "Update to 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov 2026), then restart PHP-FPM. Debian has fixed packages (DSA-6641-1 for Debian 13, DLA-4916-1 for Debian 12); Ubuntu's supported releases were still \"needs evaluation\" on 20 Nov.",
+      "versions": [
+        "php"
+      ],
+      "cite": [
+        1,
+        2,
+        10,
+        8,
+        9
+      ]
+    },
+    {
+      "label": "Turn off connection reuse",
+      "text": "Until you've updated: in nginx, remove `fastcgi_keep_conn on` (off is the default); in Apache, remove `enablereuse=on`. Then reload the web server.",
+      "cmd": "fastcgi_keep_conn off;",
+      "cite": [
+        1,
+        4,
+        5
+      ]
+    },
+    {
+      "label": "Keep PHP-FPM off the network",
+      "text": "Don't let untrusted networks reach PHP-FPM's port or socket directly.",
+      "cite": [
+        1
+      ]
+    }
+  ],
+  "fixed_in": {
+    "php": {
+      "8.6": "8.6.0",
+      "8.5": "8.5.13",
+      "8.4": "8.4.28",
+      "8.3": "8.3.37",
+      "8.2": "8.2.36"
+    }
+  },
+  "slack": "PHP CVE-2026-129289 (PHP-FPM request smuggling): an attacker with no login can hide a forged FastCGI request inside one web request and run PHP code, but only where the web server reuses connections to PHP-FPM (nginx fastcgi_keep_conn on, Apache enablereuse=on, HAProxy keeping connections; off by default in nginx and Apache) and the app opens php://input without reading it all. PHP rates it Critical (CVSS 9.2); public test code runs PHP on a target, no attacks reported, not on KEV. Fixed in 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov 2026). Stopgap: turn connection reuse off.",
+  "sources": [
+    {
+      "title": "PHP GHSA-qc49: full advisory, affected setups, mitigations",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-qc49-hpvq-g2w6",
+      "date": "19 Nov"
+    },
+    {
+      "title": "PHP: 8.x ChangeLog, 19 Nov 2026 releases",
+      "url": "https://www.php.net/ChangeLog-8.php#8.5.13",
+      "date": "19 Nov"
+    },
+    {
+      "title": "CVE record: affected versions, CVSS 9.2, CISA SSVC exploitation none",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-129289",
+      "date": "19 Nov"
+    },
+    {
+      "title": "nginx docs: fastcgi_keep_conn is off by default",
+      "url": "https://nginx.org/en/docs/http/ngx_http_fastcgi_module.html#fastcgi_keep_conn"
+    },
+    {
+      "title": "Apache docs: mod_proxy_fcgi reuse off by default; PHP-FPM example turns it on",
+      "url": "https://httpd.apache.org/docs/2.4/mod/mod_proxy_fcgi.html"
+    },
+    {
+      "title": "Public Nuclei templates; active one runs PHP on the target",
+      "url": "https://github.com/blacklanternsecurity/PoCs/pull/6",
+      "date": "19 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Debian tracker: DSA-6641-1, DLA-4916-1",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-129289"
+    },
+    {
+      "title": "Ubuntu: CVE tracker, needs evaluation",
+      "url": "https://ubuntu.com/security/CVE-2026-129289"
+    },
+    {
+      "title": "PHP: 8.6.0 ChangeLog, fixes GHSA-qc49",
+      "url": "https://www.php.net/ChangeLog-8.php#8.6.0",
+      "date": "19 Nov"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "no_login": [
+      1,
+      3
+    ],
+    "exploit": [
+      6
+    ],
+    "attacks": [
+      3
+    ],
+    "kev": [
+      7
+    ]
+  }
+}

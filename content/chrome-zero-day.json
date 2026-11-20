@@ -1,0 +1,256 @@
+{
+  "slug": "chrome-zero-day",
+  "name": "Chrome zero-day",
+  "aliases": [
+    "chrome",
+    "google chrome",
+    "chromium",
+    "edge",
+    "microsoft edge",
+    "brave",
+    "opera",
+    "electron",
+    "chromeos",
+    "xml",
+    "use after free",
+    "chrome zero-day"
+  ],
+  "cves": [
+    "CVE-2026-125350"
+  ],
+  "product": "Chrome",
+  "also_in": [
+    "Edge",
+    "Brave",
+    "Opera",
+    "Electron apps",
+    "ChromeOS"
+  ],
+  "disclosed": "2026-11-09",
+  "updated": "2026-11-20",
+  "verdict": "now",
+  "tile_line": "Exploited via web pages. In CISA KEV, due 24 Nov.",
+  "summary": "A use-after-free bug in Chromium's XML handling lets a crafted web page run code inside the browser's sandbox. Google says an exploit exists in the wild. It's fixed in Chrome 157.0.8103.50 (9 Nov 2026), and Edge, Brave, Opera and Electron have shipped fixes too.",
+  "status": {
+    "exploit": "demonstrated",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-11-10",
+      "due": "2026-11-24"
+    },
+    "no_login": true,
+    "scare": 3.4
+  },
+  "affected": [
+    {
+      "label": "An unpatched Chromium-based browser",
+      "text": "Chrome below 157.0.8103.50 on desktop and Android (Extended Stable below 156.0.8078.96; ChromeOS fixed in 156.0.8078.102). Also Edge below 157.0.4341.46 (Extended Stable 156.0.4314.80, Android 157.0.4341.53), Brave below 1.99.56 and Opera below 140.0.6074.17, and Electron apps built before Electron 45.3.0, 44.11.1 or 43.8.8. Chrome only applies updates after a relaunch.",
+      "cmd": "chrome://settings/help",
+      "cite": [
+        1,
+        2,
+        3,
+        4,
+        6,
+        7,
+        8,
+        11,
+        12,
+        13
+      ]
+    },
+    {
+      "label": "Someone visits a malicious page",
+      "text": "A crafted web page is enough to run code inside the browser's sandbox. Google says an exploit exists in the wild.",
+      "cite": [
+        5,
+        10
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update Chrome and relaunch",
+      "text": "Open the About page; Chrome checks for an update, then click Relaunch. Any 157.0.8103.50 or later build is fixed, including Chrome 158. Admins: check the version your fleet actually runs, since rollouts take days or weeks.",
+      "cmd": "chrome://settings/help",
+      "cite": [
+        1,
+        2
+      ],
+      "versions": [
+        "chrome"
+      ]
+    },
+    {
+      "label": "Check the version from a shell",
+      "text": "Linux shown. On macOS run `\"/Applications/Google Chrome.app/Contents/MacOS/Google Chrome\" --version`. On Windows, use the About page or chrome://version.",
+      "cmd": "google-chrome --version"
+    },
+    {
+      "label": "Update Edge, Brave and Opera too",
+      "text": "Edge 157.0.4341.46 (9 Nov), Extended Stable 156.0.4314.80 and Android 157.0.4341.53. Brave 1.99.56 (10 Nov, Chromium 157.0.8103.50). Opera 140.0.6074.17 (10 Nov). Later versions are fine.",
+      "cite": [
+        6,
+        7,
+        8
+      ],
+      "versions": [
+        "chromium-browsers"
+      ]
+    },
+    {
+      "label": "Update Electron apps",
+      "text": "Desktop apps built on Electron ship their own Chromium. Electron 45.3.0, 44.11.1 and 43.8.8 (10 Nov) include the fix; their notes don't name the CVE: 45.3.0 moved to a fixed Chromium, and 44.11.1 and 43.8.8 carry the libxslt fix. An app is fixed only once it ships one of these or later, so check with each vendor.",
+      "cite": [
+        11,
+        12,
+        13,
+        1
+      ],
+      "versions": [
+        "electron"
+      ]
+    }
+  ],
+  "fixed_in": {
+    "chrome": {
+      "158": "158.0.8127.36",
+      "157": "157.0.8103.50",
+      "156": "156.0.8078.96",
+      "chromeos": "156.0.8078.102"
+    },
+    "chromium-browsers": {
+      "edge": "157.0.4341.46",
+      "brave": "1.99.56",
+      "opera": "140.0.6074.17"
+    },
+    "electron": {
+      "45": "45.3.0",
+      "44": "44.11.1",
+      "43": "43.8.8"
+    }
+  },
+  "slack": "Chrome zero-day (CVE-2026-125350): use-after-free in Chromium's XML code, exploited in the wild via crafted web pages. CISA KEV added 10 Nov, due 24 Nov. Fixed in Chrome 157.0.8103.50/.51 (9 Nov); Extended Stable 156.0.8078.96. Edge 157.0.4341.46, Brave 1.99.56 and Opera 140.0.6074.17 also fixed. Check chrome://settings/help and relaunch. Electron 45.3.0 / 44.11.1 / 43.8.8 include the fix; Electron apps must ship it.",
+  "sources": [
+    {
+      "title": "Chrome Releases: Stable fix, exploit in the wild",
+      "url": "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_018223192.html",
+      "date": "9 Nov"
+    },
+    {
+      "title": "Chrome Releases: Extended Stable 156.0.8078.96",
+      "url": "https://chromereleases.googleblog.com/2026/11/extended-stable-update-for-desktop_0910980127.html",
+      "date": "9 Nov"
+    },
+    {
+      "title": "Chrome Releases: Android 157.0.8103.50",
+      "url": "https://chromereleases.googleblog.com/2026/11/chrome-for-android-update_01533302390.html",
+      "date": "9 Nov"
+    },
+    {
+      "title": "Chrome Releases: ChromeOS 156.0.8078.102",
+      "url": "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-chromeos_01089491269.html",
+      "date": "13 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: added 10 Nov, due 24 Nov",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Microsoft: Edge security release notes",
+      "url": "https://learn.microsoft.com/en-us/deployedge/microsoft-edge-relnotes-security"
+    },
+    {
+      "title": "Brave: 1.99.56 on Chromium 157.0.8103.50",
+      "url": "https://github.com/brave/brave-browser/releases/tag/v1.99.56",
+      "date": "10 Nov"
+    },
+    {
+      "title": "Opera: changelog for 140, CVE cherry-pick",
+      "url": "https://blogs.opera.com/desktop/changelog-for-140/",
+      "date": "10 Nov"
+    },
+    {
+      "title": "Electron: releases and bundled Chromium",
+      "url": "https://releases.electronjs.org/"
+    },
+    {
+      "title": "CVE record: code execution inside the sandbox",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-125350"
+    },
+    {
+      "title": "Electron 45.3.0: moves to Chromium 156.0.8078.96, which has the fix",
+      "url": "https://github.com/electron/electron/pull/55703"
+    },
+    {
+      "title": "Electron 44.11.1: libxslt use-after-free fix",
+      "url": "https://github.com/electron/electron/pull/55709"
+    },
+    {
+      "title": "Electron 43.8.8: libxslt use-after-free fix",
+      "url": "https://github.com/electron/electron/pull/55710"
+    },
+    {
+      "title": "Chrome Releases: ChromeOS 158.0.8127.65 lists the CVE",
+      "url": "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-chromeos_01891834105.html",
+      "date": "18 Nov"
+    },
+    {
+      "title": "Chrome Releases: Stable 157.0.8103.78",
+      "url": "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_01744469280.html",
+      "date": "11 Nov"
+    },
+    {
+      "title": "Chrome Releases: Stable 158.0.8127.36",
+      "url": "https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_01699533288.html",
+      "date": "17 Nov"
+    },
+    {
+      "title": "Chrome Releases: Extended Stable 156.0.8078.108",
+      "url": "https://chromereleases.googleblog.com/2026/11/extended-stable-update-for-desktop_01061812727.html",
+      "date": "17 Nov"
+    },
+    {
+      "title": "Brave: releases",
+      "url": "https://github.com/brave/brave-browser/releases"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Electron sources corrected. ChromeOS 158 confirmed fixed. Safe versions added."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Review: Electron's 10 Nov fix added (it was listed as unknown); more Edge builds; sandbox claim now cites CISA and the CVE record."
+    },
+    {
+      "date": "2026-11-13",
+      "text": "ChromeOS fix out (156.0.8078.102)."
+    },
+    {
+      "date": "2026-11-10",
+      "text": "Added to CISA KEV, due 24 Nov. Edge, Brave and Opera fixes out."
+    },
+    {
+      "date": "2026-11-09",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "no_login": [
+      1,
+      5
+    ],
+    "exploit": [
+      1
+    ],
+    "attacks": [
+      1,
+      5
+    ],
+    "kev": [
+      5
+    ]
+  }
+}

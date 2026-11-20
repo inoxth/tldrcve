@@ -1,0 +1,166 @@
+{
+  "slug": "outlook-zero-day",
+  "name": "Outlook hash leak",
+  "aliases": [
+    "outlook",
+    "microsoft outlook",
+    "office",
+    "microsoft 365 apps",
+    "office ltsc",
+    "ntlm",
+    "ntlmv2",
+    "patch tuesday",
+    "november 2026 patch tuesday",
+    "outlook zero-day"
+  ],
+  "cves": [
+    "CVE-2026-124194"
+  ],
+  "product": "Microsoft Outlook",
+  "disclosed": "2026-11-10",
+  "updated": "2026-11-20",
+  "verdict": "now",
+  "tile_line": "Exploited, in CISA KEV (due 24 Nov). Update Office.",
+  "summary": "If a user opens a crafted Office file in classic Outlook, Outlook connects to an attacker's server without its usual warning and hands over the user's NTLMv2 hash. Attackers can use that hash to sign in as the user. Microsoft says it is being exploited; it is fixed in the 10 Nov 2026 Office update, not a Windows update.",
+  "status": {
+    "exploit": "demonstrated",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-11-10",
+      "due": "2026-11-24"
+    },
+    "no_login": true,
+    "scare": 3.0
+  },
+  "affected": [
+    {
+      "label": "Classic Outlook from a listed Office",
+      "text": "Microsoft lists Microsoft 365 Apps for Enterprise, Office LTSC 2024 and Office LTSC 2021, 32- and 64-bit; retail Office 2021 and 2024 get the same Current Channel fix. Office Watch says new Outlook for Windows isn't affected and Outlook for Mac isn't on Microsoft's list.",
+      "cite": [
+        1,
+        2,
+        5
+      ]
+    },
+    {
+      "label": "Build older than the 10 Nov 2026 fix",
+      "text": "In Outlook: File > Office Account > About Outlook. Fixed builds: Current Channel 2610 (20527.20196). Monthly Enterprise 2610 (20527.20194), 2609 (20430.20264) or 2608 (20326.20320). Semi-Annual Enterprise 2610 (20527.20192), 2609 (20430.20262) or 2608 (20326.20318). LTSC 2024 2408 (17932.21140). LTSC 2021 2108 (14334.21048).",
+      "cite": [
+        1,
+        2,
+        5
+      ]
+    },
+    {
+      "label": "A user opens the malicious file",
+      "text": "The attacker has to get the user to open a crafted message or Office file. Microsoft says the Preview Pane is not an attack vector.",
+      "cite": [
+        1,
+        5
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update Office, not just Windows",
+      "text": "The fix comes through Office's own updater, not a Windows cumulative update. In any Office app: File > Office Account > Update Options > Update Now, then restart Outlook. Admins: make sure your channel has reached the builds above (Intune, Configuration Manager or your Office update source).",
+      "cite": [
+        1,
+        2,
+        5
+      ],
+      "versions": [
+        "microsoft-365-apps"
+      ]
+    },
+    {
+      "label": "Retire Office 2016 and 2019",
+      "text": "Microsoft doesn't list Office 2016 or 2019 for this CVE, though Office 2019 volume-licensed builds did get a 10 Nov update (1808, build 10417.20236). Office Watch assumes they're affected. Both are out of support: move those users to a supported Office.",
+      "cite": [
+        1,
+        2,
+        5
+      ]
+    },
+    {
+      "label": "Until patched: warn users",
+      "text": "Microsoft lists no workaround. Tell users not to open unexpected message or Office attachments, and lean on your email gateway. Microsoft hasn't published indicators of compromise.",
+      "cite": [
+        1,
+        4
+      ]
+    }
+  ],
+  "fixed_in": {
+    "microsoft-365-apps": {
+      "Current Channel": "2610 (20527.20196)",
+      "Monthly Enterprise 2610": "20527.20194",
+      "Monthly Enterprise 2609": "20430.20264",
+      "Monthly Enterprise 2608": "20326.20320",
+      "Semi-Annual 2610": "20527.20192",
+      "Semi-Annual 2609": "20430.20262",
+      "Semi-Annual 2608": "20326.20318",
+      "LTSC 2024": "17932.21140",
+      "LTSC 2021": "14334.21048"
+    }
+  },
+  "slack": "Outlook zero-day (CVE-2026-124194): opening a crafted message/Office file in classic Outlook leaks the user's NTLMv2 hash to an attacker, who can use it to sign in as the user. Exploited in the wild; CISA KEV added 10 Nov, due 24 Nov. Affects Microsoft 365 Apps and Office LTSC 2021/2024. Not zero-click: the Preview Pane doesn't trigger it. Fix is the 10 Nov Office update (e.g. Current Channel build 20527.20196), delivered through Office updates, not Windows Update. Check: File > Office Account > About Outlook.",
+  "sources": [
+    {
+      "title": "Microsoft MSRC: advisory, FAQ, affected products",
+      "url": "https://msrc.microsoft.com/update-guide/vulnerability/CVE-2026-124194",
+      "date": "10 Nov"
+    },
+    {
+      "title": "Microsoft Learn: Office security update builds",
+      "url": "https://learn.microsoft.com/en-us/officeupdates/microsoft365-apps-security-updates",
+      "date": "10 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: added 10 Nov, due 24 Nov",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "CSO Online: needs a user to open a file",
+      "url": "https://www.csoonline.com/article/4247015/november-2026-patch-tuesday-63-critical-microsoft-fixes-plus-an-outlook-zero-day.html",
+      "date": "10 Nov"
+    },
+    {
+      "title": "Office Watch: classic Outlook only, how to update",
+      "url": "https://office-watch.com/?p=78156"
+    },
+    {
+      "title": "Microsoft Learn: Microsoft 365 Apps update history",
+      "url": "https://learn.microsoft.com/en-us/officeupdates/update-history-microsoft365-apps-by-date"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Current Channel 2611 (17 Nov) is now the newest build. Safe versions added."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Review: wording matched to Microsoft's advisory; retail Office and Office 2019 builds noted."
+    },
+    {
+      "date": "2026-11-10",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "no_login": [
+      1
+    ],
+    "exploit": [
+      1
+    ],
+    "attacks": [
+      1,
+      4
+    ],
+    "kev": [
+      3
+    ]
+  }
+}

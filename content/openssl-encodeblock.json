@@ -1,0 +1,158 @@
+{
+  "slug": "openssl-encodeblock",
+  "name": "OpenSSL base64",
+  "aliases": [
+    "openssl",
+    "evp_encodeblock",
+    "base64",
+    "s_client",
+    "proxy_pass",
+    "heap overflow",
+    "cve-2026-121481",
+    "ghsa-83xj-7xh4-4p7x"
+  ],
+  "cves": [
+    "CVE-2026-121481"
+  ],
+  "ghsa": [
+    "GHSA-83xj-7xh4-4p7x"
+  ],
+  "product": "OpenSSL",
+  "disclosed": "2026-11-18",
+  "news": "2026-11-19",
+  "updated": "2026-11-20",
+  "verdict": "cycle",
+  "tile_line": "Needs ~1.6 GB of input you supply. No remote path known.",
+  "summary": "A bug in OpenSSL 4.0 and 4.1 can write past the end of a buffer when a program asks it to base64-encode about 1.6 GB or more in one go. The only trigger described so far is the openssl s_client command given a huge proxy password by the person running it. The Critical 9.8 score comes from CISA, which assumes a remote attacker with no login; OpenSSL hasn't rated it yet, and Ubuntu rates it Medium.",
+  "status": {
+    "exploit": "none",
+    "attacks": "none",
+    "kev": null,
+    "no_login": false,
+    "needs": "control over ~1.6 GB of data an app base64-encodes",
+    "scare": 0.5
+  },
+  "affected": [
+    {
+      "label": "OpenSSL 4.0.0 to 4.0.3, or 4.1.0",
+      "text": "OpenSSL's CVE record lists only these versions; 3.x and older are not listed. Ubuntu disagrees in one place: it marks the Node.js package on Ubuntu 22.04, which bundles OpenSSL 1.1.1m, as vulnerable. Apps can also bundle their own OpenSSL.",
+      "cmd": "openssl version",
+      "cite": [
+        1,
+        7
+      ]
+    },
+    {
+      "label": "Something encodes ~1.6 GB at once",
+      "text": "A program has to pass more than (INT_MAX / 4) * 3 bytes, about 1.6 GB, to `EVP_EncodeBlock()` in one call. Inside OpenSSL the known path is the proxy login of `openssl s_client -proxy_pass`, with the password read from an environment variable because a command line is too short to hold it. The fix changes only the base64 code and the HTTP proxy login code.",
+      "cite": [
+        1,
+        2
+      ]
+    },
+    {
+      "label": "An attacker controls that data",
+      "text": "The s_client proxy password is a setting chosen by whoever runs the command, so an attacker would already need to control your command or environment. Apps that call `EVP_EncodeBlock()` themselves on huge untrusted input would also be exposed. CISA's 9.8 assumes a remote attacker with no login; neither OpenSSL nor NVD has scored it.",
+      "cite": [
+        2,
+        1,
+        3,
+        5
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update when 4.1.1 / 4.0.4 ship",
+      "text": "OpenSSL's CVE record names 4.1.1 and 4.0.4 as the first fixed versions, and OpenSSL has scheduled those releases for 1 Dec 2026. On 20 Nov the fix was still under review and not merged, so check the release notes. Debian and Ubuntu had not assessed their packages yet on 20 Nov.",
+      "pending": {
+        "expected": "2026-12-01"
+      },
+      "cite": [
+        1,
+        4,
+        2,
+        9,
+        7,
+        8
+      ]
+    },
+    {
+      "label": "Only use proxy passwords you set",
+      "text": "If you script `openssl s_client -proxy_pass`, don't let other people supply the password or the environment variable it's read from.",
+      "cite": [
+        2
+      ]
+    },
+    {
+      "label": "Cap input in your own code",
+      "text": "If your code calls `EVP_EncodeBlock()` on data from others, reject inputs over (INT_MAX / 4) * 3 bytes. That's the limit OpenSSL's fix enforces.",
+      "cite": [
+        2
+      ]
+    }
+  ],
+  "slack": "OpenSSL CVE-2026-121481 (EVP_EncodeBlock heap overflow): OpenSSL 4.0.0-4.0.3 and 4.1.0 can write past a buffer when asked to base64-encode about 1.6 GB or more in one call. The only trigger described is openssl s_client with a huge -proxy_pass set by the person running it; not a remote bug in TLS servers or clients as far as any source shows. The 9.8 Critical score is CISA's, not OpenSSL's (no OpenSSL rating yet; Ubuntu says Medium). No public exploit, no attacks, not on KEV. Fix expected in 4.1.1 and 4.0.4 (scheduled 1 Dec 2026); patch on your normal cycle.",
+  "sources": [
+    {
+      "title": "CVE record: OpenSSL lists 4.0.0-4.0.3 and 4.1.0; CISA adds 9.8, SSVC exploitation none",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-121481",
+      "date": "18 Nov"
+    },
+    {
+      "title": "OpenSSL PR #33652: the fix, s_client -proxy_pass trigger, still open on 20 Nov",
+      "url": "https://github.com/openssl/openssl/pull/33652",
+      "date": "10 Nov"
+    },
+    {
+      "title": "OpenSSL: vulnerabilities list, no entry or rating for this CVE on 20 Nov",
+      "url": "https://openssl-library.org/news/vulnerabilities/"
+    },
+    {
+      "title": "OpenSSL advisory: 4.1.1, 4.0.4 releases scheduled for 1 Dec 2026",
+      "url": "https://openssl-library.org/news/secadv/20261117.txt",
+      "date": "17 Nov"
+    },
+    {
+      "title": "NVD: awaiting analysis, only CISA's 9.8 score",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-121481"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "Ubuntu: priority Medium, openssl needs evaluation, Node.js on 22.04 vulnerable",
+      "url": "https://ubuntu.com/security/CVE-2026-121481",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Debian tracker: no packages assessed yet",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-121481"
+    },
+    {
+      "title": "OpenSSL releases: newest are 4.1.0 and 4.0.3, no 4.1.1 or 4.0.4 yet",
+      "url": "https://github.com/openssl/openssl/releases"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "no_login": [
+      2
+    ],
+    "exploit": [
+      1
+    ],
+    "attacks": [
+      1
+    ],
+    "kev": [
+      6
+    ]
+  }
+}

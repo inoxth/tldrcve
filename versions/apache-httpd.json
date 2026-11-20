@@ -1,0 +1,35 @@
+{
+  "id": "apache-httpd",
+  "name": "Apache httpd",
+  "about": "The newest release on each Apache httpd line we track. Each one fixes every Apache httpd bug we cover.",
+  "feed": null,
+  "filter": "apache",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "2.4",
+      "key": "2.4",
+      "latest": "2.4.71"
+    }
+  ],
+  "older": "Standalone mod_h2 gets no fix: use the module built into httpd. Distro packages carry fixes under their own version numbers.",
+  "unfixed": [
+    {
+      "line": "mod_h2 (standalone)",
+      "note": "Archived, no fixed release. Use the module built into httpd.",
+      "pages": [
+        "apache-http2"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "Apache httpd: 2.4 vulnerabilities",
+      "url": "https://httpd.apache.org/security/vulnerabilities_24.html"
+    },
+    {
+      "title": "Horizon3: standalone mod_h2 has no fix",
+      "url": "https://horizon3.ai/attack-research/vulnerabilities/cve-2026-119618/"
+    }
+  ]
+}

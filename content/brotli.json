@@ -1,0 +1,242 @@
+{
+  "slug": "brotli",
+  "name": "Brotli decoder RCE",
+  "aliases": [
+    "node2shell",
+    "http2shell",
+    "broccoli2shell",
+    "node.js",
+    "node",
+    "envoy",
+    "istio",
+    ".net",
+    "dotnet",
+    "python"
+  ],
+  "cves": [
+    "CVE-2026-111497"
+  ],
+  "ghsa": [
+    "GHSA-3wvj-j6qm-62mr"
+  ],
+  "product": "Brotli",
+  "disclosed": "2026-10-21",
+  "updated": "2026-11-20",
+  "verdict": "now",
+  "tile_line": "In Node.js, .NET, Envoy, Python. In CISA KEV.",
+  "summary": "A bug in the Brotli decompressor, built into Node.js, .NET, Envoy and many Python apps, can crash your app, leak memory or possibly run code. It only matters where you decompress Brotli data someone else controls, which is common, and attacks have started. The public exploit only runs code on a deliberately weakened build.",
+  "affected": [
+    {
+      "label": "A vulnerable Brotli copy",
+      "text": "Brotli 1.0.3–1.2.0, Node.js below 22.23.4 / 24.22.1 / 26.12.1 (including 20, 23 and 25, which get no fix), .NET 8/9/10, Envoy/Istio, or Python `Brotli` / `brotlicffi` below the fix, and PHP for Windows before the 26 Oct rebuilds. On RHEL, Node 22, Node 24 on RHEL 10 and .NET 9/10/11 use the system libbrotli, so update that package too; Node 24 on RHEL 8/9 and .NET 8 bundle their own copy. .NET Framework, Java and pure-JS/Rust ports use other code and aren't affected. `process.versions.brotli` only shows Node's bundled copy, so check `node -v`.",
+      "cmd": "node -v\npip show Brotli brotlicffi\ndpkg -l | grep -i brotli",
+      "cite": [
+        9,
+        2,
+        5,
+        8,
+        10
+      ]
+    },
+    {
+      "label": "You decompress outside Brotli data",
+      "text": "Node's `fetch()` or `zlib` Brotli APIs, Express 5 request bodies, Python requests/urllib3/aiohttp with a Brotli package installed, .NET `HttpClient` auto-decompression, ASP.NET Core request decompression or BrotliStream/BrotliDecoder (off by default), PHP's cURL with auto-decompression, or Envoy/Istio with the Brotli decompressor turned on. A bare `node:http` server doesn't decompress.",
+      "cite": [
+        2,
+        5,
+        9,
+        10
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update the runtime",
+      "text": "Install the latest safe version for your line (listed below); it also fixes later bugs. Node.js 20, 23 and 25 get no fix, and .NET 8 and 9 reached end of life on 10 Nov 2026. Also: PHP for Windows 8.5.12-1 / 8.4.27-1 / 8.3.36-1 / 8.2.35-1, and Brotli itself 1.0.10 / 1.1.1 / 1.2.1.",
+      "cite": [
+        1,
+        2,
+        5,
+        6,
+        7,
+        10,
+        13,
+        14
+      ],
+      "versions": [
+        "nodejs",
+        "dotnet",
+        "envoy",
+        "istio",
+        "brotli-python"
+      ]
+    },
+    {
+      "label": "Rebuild container images",
+      "text": "Patching the host doesn't fix copies baked into images. Rebuild, redeploy, and bump lockfile pins.",
+      "cite": [
+        5
+      ]
+    },
+    {
+      "label": "Stopgap: block br request bodies",
+      "text": "Reject `Content-Encoding: br` request bodies at your proxy or WAF. This doesn't cover responses your app fetches.",
+      "cite": [
+        9
+      ]
+    }
+  ],
+  "fixed_in": {
+    "nodejs": {
+      "26": "26.12.1",
+      "24": "24.22.1",
+      "22": "22.23.4"
+    },
+    "dotnet": {
+      "11": "11.0 RC3",
+      "10": "10.0.14",
+      "9": "9.0.22",
+      "8": "8.0.33"
+    },
+    "envoy": {
+      "1.40": "1.40.0",
+      "1.39": "1.39.3",
+      "1.38": "1.38.6",
+      "1.37": "1.37.8",
+      "1.36": "1.36.12"
+    },
+    "istio": {
+      "1.31": "1.31.2",
+      "1.30": "1.30.6"
+    },
+    "brotli-python": {
+      "Brotli": "1.2.1",
+      "brotlicffi": "1.2.1.0"
+    }
+  },
+  "slack": "Brotli decoder RCE (CVE-2026-111497, aka Node2Shell / HTTP2Shell): in CISA KEV, attacks seen. Affects Node.js 22/24/26, .NET 8/9/10, Envoy/Istio and Python Brotli wherever you decompress outside data (fetch(), HttpClient, request bodies). Update to Node 22.23.4 / 24.22.1 / 26.12.1, .NET 8.0.33 / 9.0.22 / 10.0.14 / 11.0.0, Python Brotli 1.2.1, and rebuild container images.",
+  "sources": [
+    {
+      "title": "google/brotli: fixed releases",
+      "url": "https://github.com/google/brotli/releases",
+      "date": "21 Oct"
+    },
+    {
+      "title": "Node.js: October 2026 security releases",
+      "url": "https://nodejs.org/en/blog/vulnerability/october-2026-security-releases"
+    },
+    {
+      "title": "CISA KEV: added 27 Oct",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "date": "27 Oct"
+    },
+    {
+      "title": "BleepingComputer: CISA warns of attacks",
+      "url": "https://www.bleepingcomputer.com/news/security/cisa-warns-of-hackers-now-exploiting-critical-node2shell-flaw/"
+    },
+    {
+      "title": "Microsoft: .NET out-of-band updates",
+      "url": "https://devblogs.microsoft.com/dotnet/dotnet-october-2026-oob-security-updates/"
+    },
+    {
+      "title": "Istio: security bulletin 2026-007",
+      "url": "https://istio.io/latest/news/security/istio-security-2026-007/"
+    },
+    {
+      "title": "Envoy: GHSA-3wvj-j6qm-62mr",
+      "url": "https://github.com/envoyproxy/envoy/security/advisories/GHSA-3wvj-j6qm-62mr"
+    },
+    {
+      "title": "Red Hat: CVE page",
+      "url": "https://access.redhat.com/security/cve/CVE-2026-111497"
+    },
+    {
+      "title": "broccoli2shell.com: preconditions (aggregator)",
+      "url": "https://broccoli2shell.com"
+    },
+    {
+      "title": "PHP: Windows builds rebuilt with Brotli 1.2.1",
+      "url": "https://www.php.net/archive/2026.php",
+      "date": "26 Oct"
+    },
+    {
+      "title": "Node.js: release index",
+      "url": "https://nodejs.org/dist/index.json"
+    },
+    {
+      "title": "Node.js: November 2026 security releases",
+      "url": "https://nodejs.org/en/blog/vulnerability/november-2026-security-releases"
+    },
+    {
+      "title": ".NET 8 release metadata: end of life 10 Nov 2026",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/8.0/releases.json"
+    },
+    {
+      "title": ".NET 9 release metadata: end of life 10 Nov 2026",
+      "url": "https://builds.dotnet.microsoft.com/dotnet/release-metadata/9.0/releases.json"
+    },
+    {
+      "title": "Envoy: releases",
+      "url": "https://github.com/envoyproxy/envoy/releases"
+    },
+    {
+      "title": "PyPI: Brotli",
+      "url": "https://pypi.org/project/Brotli/"
+    },
+    {
+      "title": "PyPI: brotlicffi",
+      "url": "https://pypi.org/project/brotlicffi/"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "RHEL bundling corrected (Node 24 on RHEL 8/9 and .NET 8 carry their own copy). .NET 11.0.0 is out; .NET 8 and 9 reached end of life. Safe versions added."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Review: full Envoy and Node version lists, RHEL system-library note, PHP for Windows, exploit caveat."
+    },
+    {
+      "date": "2026-11-03",
+      "text": "Microsoft: container images must be rebuilt."
+    },
+    {
+      "date": "2026-10-27",
+      "text": "Added to CISA KEV. Verdict raised to Patch now."
+    },
+    {
+      "date": "2026-10-21",
+      "text": "Published."
+    }
+  ],
+  "status": {
+    "exploit": "public",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-10-27",
+      "due": "2026-11-10"
+    },
+    "aka": "Node2Shell, HTTP2Shell",
+    "scare": 3.5
+  },
+  "also_in": [
+    "Node.js",
+    ".NET",
+    "Envoy",
+    "Python"
+  ],
+  "status_cite": {
+    "exploit": [
+      9
+    ],
+    "attacks": [
+      3,
+      4,
+      9
+    ],
+    "kev": [
+      3
+    ]
+  }
+}

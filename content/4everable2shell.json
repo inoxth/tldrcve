@@ -1,0 +1,200 @@
+{
+  "slug": "4everable2shell",
+  "name": "4EverAble2Shell",
+  "aliases": [
+    "4everable2shell",
+    "able2shell",
+    "agent2shell",
+    "n-central",
+    "n-able",
+    "n-able n-central",
+    "apache axis",
+    "axis 1.4",
+    "legacy api",
+    "cve-2026-90436",
+    "vuln-2026-0009"
+  ],
+  "cves": [
+    "CVE-2026-90436"
+  ],
+  "product": "N-able N-central",
+  "disclosed": "2026-11-12",
+  "updated": "2026-11-20",
+  "verdict": "now",
+  "tile_line": "Exploited, no login. Axis bug in KEV, due 21 Nov.",
+  "summary": "A public exploit chain gives an attacker root on on-prem N-central servers that have the old Legacy API turned on, with no login. It gets in through an Apache Axis bug (CVE-2026-90436); the N-central root step has no CVE yet. Security firm Huntback found crypto miners on 21 servers within hours, and N-able reported attacks on 13 Nov.",
+  "status": {
+    "exploit": "public",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-11-18",
+      "due": "2026-11-21"
+    },
+    "no_login": true,
+    "aka": "Able2Shell, Agent2Shell (sibling chains)",
+    "scare": 3.4
+  },
+  "affected": [
+    {
+      "label": "On-prem N-central below 2026.4 HF3",
+      "text": "Hotfix 2 (2026.4.1.26, 10 Nov) does not stop this chain; the exploit was tested on it. Hotfix 3 (2026.4.1.39, 16 Nov) removes the Legacy API. N-able says hosted N-central is not vulnerable to the server chain and gets HF3 automatically.",
+      "cite": [
+        3,
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "label": "Legacy API is enabled",
+      "text": "Off by default, but admins can turn it on under Administration > Mail and Network Settings > Network Security > LEGACY APIS. N-able and the researcher agree the server chain needs it on and reachable.",
+      "cite": [
+        3,
+        4,
+        8
+      ]
+    },
+    {
+      "label": "Attacker can reach the server",
+      "text": "No login needed: the Axis bug fires while the SOAP request is parsed, before any per-service auth runs. N-able says the server chain needs the Legacy API enabled and exposed to the internet.",
+      "cite": [
+        7,
+        4
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Upgrade to 2026.4 HF3 (2026.4.1.39)",
+      "text": "Rapid7 says apply it as an emergency, outside normal patch cycles. HF3 permanently blocks the Legacy API and fixes 17 new CVEs. Also update all Agents and Probes to 2026.4.1 HF3, and Patch Management Engine to 2.14.4.5829 or later.",
+      "cite": [
+        4,
+        5,
+        6
+      ],
+      "versions": [
+        "n-central"
+      ]
+    },
+    {
+      "label": "Until then: turn off Legacy API",
+      "text": "Make sure the LEGACY APIS setting is off, even on HF2. If you truly need it, never expose it to the internet.",
+      "cite": [
+        4,
+        5,
+        8
+      ]
+    },
+    {
+      "label": "Hunt for compromise",
+      "text": "Look in web logs for requests to `/dms/services/ServerUI` that mention `jline.internal.TerminalLineSettings`, an unexpected `xvd.service` unit, mining processes, files in `/tmp/.xvd` or `/var/tmp/.xvd`, and traffic to 157.20.241[.]16. If found, treat the server as fully owned (root).",
+      "cmd": "systemctl status xvd.service; ls -la /tmp/.xvd /var/tmp/.xvd",
+      "cite": [
+        3,
+        4
+      ]
+    },
+    {
+      "label": "Then clean up downstream",
+      "text": "A hacked RMM server reaches every managed client. Rotate secrets stored in Automation Manager policies, enforce MFA on N-central accounts, and review activity from 11 Nov on for new accounts, scripts, scheduled tasks and remote sessions. The same Axis bug was also exploited against Confluence Data Center on 13 Nov.",
+      "cite": [
+        4,
+        5
+      ]
+    }
+  ],
+  "fixed_in": {
+    "n-central": {
+      "server": "2026.4.1.39 (HF3)",
+      "agents": "2026.4.1 HF3",
+      "pme": "2.14.4.5829"
+    }
+  },
+  "slack": "4EverAble2Shell (N-able N-central): public exploit chain gives unauthenticated root on on-prem N-central servers with Legacy API enabled. It uses Apache Axis CVE-2026-90436 (CISA KEV, added 18 Nov, due 21 Nov). Huntback found miners on 21 servers within hours (most on Hotfix 2); N-able reported attacks on 13 Nov. Fix: upgrade the server to 2026.4 HF3 (2026.4.1.39), which removes the Legacy API, and update Agents and Probes. Until then, make sure Legacy API is off, and check for xvd.service or /tmp/.xvd. Hosted N-central: N-able says not vulnerable.",
+  "sources": [
+    {
+      "title": "CISA KEV: CVE-2026-90436 added 18 Nov, due 21 Nov",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "date": "18 Nov"
+    },
+    {
+      "title": "CISA alert: four KEV additions incl. Apache Axis",
+      "url": "https://www.cisa.gov/news-events/alerts/2026/11/18/cisa-adds-four-known-exploited-vulnerabilities-catalog",
+      "date": "18 Nov"
+    },
+    {
+      "title": "BleepingComputer: chain, 21 miners, IoCs, N-able response",
+      "url": "https://www.bleepingcomputer.com/news/security/new-n-able-4everable2shell-zero-day-exploited-hours-after-poc-released/",
+      "date": "12 Nov"
+    },
+    {
+      "title": "Huntress: timeline, HF3 build, actions",
+      "url": "https://www.huntress.com/blog/n-able-disables-cloud-services-following-disclosure-of-able2shell-exploit-chains",
+      "date": "17 Nov"
+    },
+    {
+      "title": "Rapid7: CVE-2026-90436 exploited, HF3 guidance",
+      "url": "https://www.rapid7.com/blog/post/etr-rapid7-detected-exploitation-of-cve-2026-90436-against-atlassian-confluence-data-center-n-able-n-central-also-exploited/",
+      "date": "17 Nov"
+    },
+    {
+      "title": "N-able: remediation update, HF3 removes Legacy API",
+      "url": "https://www.n-able.com/blog/n-able-vulnerability-remediation-update",
+      "date": "16 Nov"
+    },
+    {
+      "title": "NVD: CVE-2026-90436, Axis 1.x through 1.4, no fix release",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-90436",
+      "date": "6 Nov"
+    },
+    {
+      "title": "N-able docs: where the Legacy API setting lives",
+      "url": "https://developer.n-able.com/n-central/docs/soap-api-legacy"
+    },
+    {
+      "title": "Tenable: Able2Shell FAQ",
+      "url": "https://www.tenable.com/blog/able2shell-frequently-asked-questions-for-reported-n-able-n-central-zero-day-vulnerabilities",
+      "date": "16 Nov"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Safe versions added; nothing else changed."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Review: N-able confirmed attacks on 13 Nov; no CVE for the N-central step; claims matched to sources."
+    },
+    {
+      "date": "2026-11-18",
+      "text": "CVE-2026-90436 (Apache Axis) added to CISA KEV, due 21 Nov."
+    },
+    {
+      "date": "2026-11-16",
+      "text": "N-able shipped 2026.4 HF3 (2026.4.1.39), which permanently blocks the Legacy API."
+    },
+    {
+      "date": "2026-11-12",
+      "text": "Published."
+    }
+  ],
+  "status_cite": {
+    "no_login": [
+      3,
+      7
+    ],
+    "exploit": [
+      3,
+      5
+    ],
+    "attacks": [
+      3,
+      5
+    ],
+    "kev": [
+      1,
+      2
+    ]
+  }
+}

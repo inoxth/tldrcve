@@ -1,0 +1,44 @@
+{
+  "id": "electron",
+  "name": "Electron",
+  "about": "The newest release on each Electron line we track. Each one fixes every Electron bug we cover.",
+  "feed": null,
+  "filter": "electron",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "45",
+      "key": "45",
+      "latest": "45.4.1"
+    },
+    {
+      "line": "44",
+      "key": "44",
+      "latest": "44.11.5"
+    },
+    {
+      "line": "43",
+      "key": "43",
+      "latest": "43.8.12"
+    }
+  ],
+  "older": "Apps built on Electron are fixed only once they ship one of these.",
+  "sources": [
+    {
+      "title": "Electron 45.3.0: moves to Chromium 156.0.8078.96, which has the fix",
+      "url": "https://github.com/electron/electron/pull/55703"
+    },
+    {
+      "title": "Electron: releases and bundled Chromium",
+      "url": "https://releases.electronjs.org/"
+    },
+    {
+      "title": "Electron 44.11.1: libxslt use-after-free fix",
+      "url": "https://github.com/electron/electron/pull/55709"
+    },
+    {
+      "title": "Electron 43.8.8: libxslt use-after-free fix",
+      "url": "https://github.com/electron/electron/pull/55710"
+    }
+  ]
+}

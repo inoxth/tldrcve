@@ -1,0 +1,63 @@
+{
+  "id": "php",
+  "name": "PHP",
+  "about": "The newest release on each supported PHP line. Each one fixes every PHP bug we cover.",
+  "feed": "php",
+  "filter": "php",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "8.6",
+      "key": "8.6",
+      "latest": "8.6.0",
+      "released": "2026-11-19"
+    },
+    {
+      "line": "8.5",
+      "key": "8.5",
+      "latest": "8.5.13",
+      "released": "2026-11-19"
+    },
+    {
+      "line": "8.4",
+      "key": "8.4",
+      "latest": "8.4.28",
+      "released": "2026-11-19"
+    },
+    {
+      "line": "8.3",
+      "key": "8.3",
+      "latest": "8.3.37",
+      "released": "2026-11-19"
+    },
+    {
+      "line": "8.2",
+      "key": "8.2",
+      "latest": "8.2.36",
+      "released": "2026-11-19",
+      "note": "Security fixes end 31 Dec 2026"
+    }
+  ],
+  "older": "PHP 8.1 and older get no fixes from PHP. Distros may backport fixes without changing the version number.",
+  "unfixed": [
+    {
+      "line": "8.1 and older",
+      "note": "End of life: PHP ships no fixes.",
+      "pages": [
+        "php2shell",
+        "php-sessions",
+        "php-fpm-smuggling"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "php.net: active releases (feed)",
+      "url": "https://www.php.net/releases/active.php"
+    },
+    {
+      "title": "php.net: supported versions",
+      "url": "https://www.php.net/supported-versions.php"
+    }
+  ]
+}

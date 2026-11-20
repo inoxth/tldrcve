@@ -1,0 +1,28 @@
+{
+  "id": "openssl",
+  "name": "OpenSSL",
+  "about": "No fixed OpenSSL 4.x release yet for the bug we cover. It's low risk: see the bug's page before you rush.",
+  "feed": null,
+  "filter": "openssl",
+  "checked": "2026-11-20",
+  "lines": [],
+  "unfixed": [
+    {
+      "line": "4.0.0 to 4.0.3, 4.1.0",
+      "note": "Fix expected in 4.0.4 and 4.1.1, scheduled for 1 Dec 2026. 3.x isn't listed as affected.",
+      "pages": [
+        "openssl-encodeblock"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "CVE record: affected 4.0.0-4.0.3 and 4.1.0",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-121481"
+    },
+    {
+      "title": "OpenSSL advisory: 4.1.1, 4.0.4 scheduled for 1 Dec 2026",
+      "url": "https://openssl-library.org/news/secadv/20261117.txt"
+    }
+  ]
+}

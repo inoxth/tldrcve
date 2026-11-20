@@ -1,0 +1,189 @@
+{
+  "slug": "sglang",
+  "name": "SGLang RCE",
+  "aliases": [
+    "sglang",
+    "sgl-project",
+    "lmsys",
+    "near ai",
+    "llm inference server",
+    "load_lora_adapter_from_tensors",
+    "vu#281278",
+    "cve-2026-15969",
+    "cve-2026-15971",
+    "cve-2026-15974",
+    "cve-2026-15976",
+    "cve-2026-15977",
+    "cve-2026-15978"
+  ],
+  "cves": [
+    "CVE-2026-15969",
+    "CVE-2026-15971",
+    "CVE-2026-15974",
+    "CVE-2026-15976",
+    "CVE-2026-15977",
+    "CVE-2026-15978"
+  ],
+  "product": "SGLang",
+  "disclosed": "2026-07-30",
+  "updated": "2026-11-20",
+  "verdict": "if",
+  "tile_line": "Exploited, no fix yet. Risky if the port is reachable.",
+  "summary": "SGLang, a popular server for running AI models, has unfixed bugs that let anyone who can reach its port run code or steal its API keys, mostly without logging in. On 9 Nov 2026 NEAR AI said an attacker used an SGLang code-execution bug, which it hasn't named, to break into an inference server. There's no fix yet, so keep SGLang off untrusted networks.",
+  "status": {
+    "exploit": "demonstrated",
+    "attacks": "seen",
+    "kev": null,
+    "no_login": true,
+    "scare": 2.8
+  },
+  "affected": [
+    {
+      "label": "You run SGLang (any version)",
+      "text": "The CVE record for CVE-2026-15969 lists v0.5.15 and earlier, but no fixed version has been named. As of 20 Nov 2026 the advisories still list no patched version, and v0.5.23 (2 Nov) is the newest release. Treat every version as affected.",
+      "cmd": "pip show sglang",
+      "cite": [
+        3,
+        6,
+        7,
+        8
+      ]
+    },
+    {
+      "label": "Its HTTP port is reachable by attackers",
+      "text": "By default SGLang listens only on 127.0.0.1, port 30000. You're exposed if it was started with --host 0.0.0.0, published from a container or Kubernetes, or put behind a proxy that forwards every route. API keys alone don't close it: the LoRA tensor route has no auth check when LoRA is on, and /server_info can leak the keys. Admin routes are open when no keys are set. Changes merged on 7 and 14 Nov stop /server_info leaking keys and make admin routes need an admin key (the current docs already describe this), but no release includes them yet.",
+      "cmd": "ss -ltnp | grep 30000",
+      "cite": [
+        4,
+        5,
+        11,
+        12
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Keep SGLang off untrusted networks",
+      "text": "Bind it to 127.0.0.1 or a private network, segment inference hosts, and firewall the port. If clients must reach it, put a reverse proxy in front that allows only the inference routes you use and blocks everything else, including /server_info.",
+      "cite": [
+        2,
+        4,
+        8
+      ]
+    },
+    {
+      "label": "Set separate user and admin API keys",
+      "text": "Start with both --api-key and --admin-api-key, and block /server_info, which gives the admin key to anyone holding the user key. This doesn't fix the LoRA tensor bug, so it's no substitute for network limits.",
+      "cite": [
+        4,
+        5
+      ]
+    },
+    {
+      "label": "Turn off pickle IPC and unused features",
+      "text": "Set SGLANG_USE_PICKLE_IPC to false (it defaults to true). Don't enable LoRA, the dumper (DUMPER_SERVER_PORT), remote weight updates or distributed weight routes unless you need them. Prefer safetensors and refuse untrusted .bin/.pt checkpoints.",
+      "cite": [
+        2,
+        4
+      ]
+    },
+    {
+      "label": "Was it exposed? Rotate keys, check logs",
+      "text": "/server_info returns the API keys and SSL key password, so rotate them. Make sure API keys and prompts aren't written to logs; NEAR AI lost two customers' API keys that way. Watch for an upstream fix and update when one ships.",
+      "cite": [
+        1,
+        4,
+        8
+      ]
+    }
+  ],
+  "slack": "SGLang (LLM inference server) has unfixed bugs that let anyone who can reach its HTTP port run code or steal API keys, mostly with no login (CERT/CC VU#281278, CVE-2026-15969 and others). NEAR AI said on 9 Nov 2026 that an attacker used an unnamed SGLang code-execution bug to break into its inference servers. No fixed release exists. If you run SGLang, make sure port 30000 isn't reachable from untrusted networks (default bind is 127.0.0.1), set both --api-key and --admin-api-key, set SGLANG_USE_PICKLE_IPC=false, and rotate keys if it was exposed.",
+  "sources": [
+    {
+      "title": "NEAR AI: incident report, SGLang RCE used",
+      "url": "https://near.ai/blog/security-incident-report-sglang-vulnerability",
+      "date": "9 Nov"
+    },
+    {
+      "title": "CERT/CC VU#281278: six SGLang CVEs, no patches",
+      "url": "https://kb.cert.org/vuls/id/281278",
+      "date": "30 Jul"
+    },
+    {
+      "title": "CVE.org: CVE-2026-15969 record (v0.5.15 and earlier)",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-15969"
+    },
+    {
+      "title": "Apoorv Dayal: researcher write-up, routes and defaults",
+      "url": "https://thoughts.apoorvdayal.com/posts/sglang-disclosures/",
+      "date": "30 Jul"
+    },
+    {
+      "title": "SGLang docs: server argument defaults",
+      "url": "https://docs.sglang.io/advanced_features/server_arguments.html"
+    },
+    {
+      "title": "SGLang GitHub: releases",
+      "url": "https://github.com/sgl-project/sglang/releases"
+    },
+    {
+      "title": "HOL Guard: CVE-2026-15969, no fixed version",
+      "url": "https://hol.org/guard/security/cves/CVE-2026-15969"
+    },
+    {
+      "title": "Cloud Security Alliance: research note on the breach",
+      "url": "https://labs.cloudsecurityalliance.org/research/csa-research-note-confidential-ai-inference-tee-limits-20261/"
+    },
+    {
+      "title": "Decrypt: NEAR AI breach coverage",
+      "url": "https://decrypt.co/382965/near-ai-breach-exposes-user-details-data-ai-agents",
+      "date": "10 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    },
+    {
+      "title": "SGLang PR #48518: /server_info stops leaking keys (merged 7 Nov, unreleased)",
+      "url": "https://github.com/sgl-project/sglang/pull/48518",
+      "date": "7 Nov"
+    },
+    {
+      "title": "SGLang PR #49896: admin routes need an admin key (merged 14 Nov, unreleased)",
+      "url": "https://github.com/sgl-project/sglang/pull/49896",
+      "date": "14 Nov"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Still no fixed release (newest v0.5.23). Partial fixes merged on 7 and 14 Nov, not yet released; this explains the docs conflict. Safe versions added."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Review: no fix as of 19 Nov; NEAR AI hasn't named the bug; /server_info leaks the admin key; docs conflict noted."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Published."
+    }
+  ],
+  "news": "2026-11-09",
+  "status_cite": {
+    "no_login": [
+      2,
+      4
+    ],
+    "exploit": [
+      4
+    ],
+    "attacks": [
+      1,
+      8,
+      9
+    ],
+    "kev": [
+      10
+    ]
+  }
+}

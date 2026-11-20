@@ -1,0 +1,40 @@
+{
+  "id": "n-central",
+  "name": "N-able N-central",
+  "about": "The newest release on each N-able N-central line we track. Each one fixes every N-able N-central bug we cover.",
+  "feed": null,
+  "filter": "n-central",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "Server 2026.4",
+      "key": "server",
+      "latest": "2026.4.1.39 (HF3)"
+    },
+    {
+      "line": "Agents and Probes",
+      "key": "agents",
+      "latest": "2026.4.1 HF3"
+    },
+    {
+      "line": "Patch Management Engine",
+      "key": "pme",
+      "latest": "2.14.4.5829"
+    }
+  ],
+  "older": "Agents and Probes have no published build number.",
+  "sources": [
+    {
+      "title": "Huntress: timeline, HF3 build, actions",
+      "url": "https://www.huntress.com/blog/n-able-disables-cloud-services-following-disclosure-of-able2shell-exploit-chains"
+    },
+    {
+      "title": "N-able: remediation update, HF3 removes Legacy API",
+      "url": "https://www.n-able.com/blog/n-able-vulnerability-remediation-update"
+    },
+    {
+      "title": "Rapid7: CVE-2026-90436 exploited, HF3 guidance",
+      "url": "https://www.rapid7.com/blog/post/etr-rapid7-detected-exploitation-of-cve-2026-90436-against-atlassian-confluence-data-center-n-able-n-central-also-exploited/"
+    }
+  ]
+}

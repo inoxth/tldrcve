@@ -1,0 +1,25 @@
+name: Correction
+description: Something on a page is wrong or out of date
+labels: [correction]
+body:
+  - type: input
+    id: page
+    attributes:
+      label: Page
+      description: The tldrcve.com URL
+      placeholder: https://tldrcve.com/nginx2root/
+    validations:
+      required: true
+  - type: textarea
+    id: what
+    attributes:
+      label: What's wrong, and what should it say?
+    validations:
+      required: true
+  - type: input
+    id: source
+    attributes:
+      label: Source
+      description: A link that shows it (vendor advisory, CISA, CVE record, researcher write-up)
+    validations:
+      required: true

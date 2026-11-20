@@ -1,0 +1,13 @@
+site/
+__pycache__/
+*.pyc
+.DS_Store
+.claude/
+generated_images/
+
+# wrangler files
+.wrangler
+.dev.vars*
+!.dev.vars.example
+.env*
+!.env.example

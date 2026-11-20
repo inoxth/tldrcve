@@ -1,0 +1,246 @@
+{
+  "slug": "litellm",
+  "name": "LiteLLM RCE",
+  "aliases": [
+    "litellm",
+    "berriai",
+    "litellm proxy",
+    "ai gateway",
+    "test_custom_code",
+    "custom code guardrail",
+    "cve-2026-40217",
+    "cve-2026-42271",
+    "cve-2026-42208",
+    "cve-2026-59822",
+    "cve-2026-47101",
+    "cve-2026-47102"
+  ],
+  "cves": [
+    "CVE-2026-40217"
+  ],
+  "ghsa": [
+    "GHSA-wxxx-gvqv-xp7p"
+  ],
+  "product": "BerriAI LiteLLM proxy",
+  "disclosed": "2026-04-08",
+  "updated": "2026-11-20",
+  "verdict": "now",
+  "tile_line": "In CISA KEV, due 2 Dec. Public PoC, needs admin key.",
+  "summary": "LiteLLM's proxy has an endpoint for testing custom guardrail code, and its home-made sandbox can be escaped to run any command, as root in the default Docker image. It needs a proxy-admin key, but attackers have been guessing default keys, and two other bugs let ordinary users become admin on older versions.",
+  "status": {
+    "exploit": "public",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-11-18",
+      "due": "2026-12-02"
+    },
+    "no_login": false,
+    "scare": 3.0,
+    "needs": "a LiteLLM admin key"
+  },
+  "affected": [
+    {
+      "label": "LiteLLM 1.81.8 – 1.83.10",
+      "text": "GitHub's advisory lists >= 1.81.8, < 1.83.10 as affected, but its text says the fix is in 1.83.11, so count 1.83.10 as affected to be safe. Only the proxy server is at risk, not plain use of the Python SDK. In Docker, image tags don't reliably match versions (`main-latest` tells you nothing), so check the pip version inside the container.",
+      "cmd": "pip show litellm",
+      "cite": [
+        3,
+        5
+      ]
+    },
+    {
+      "label": "Management API is reachable",
+      "text": "The attacker can reach the proxy's management API, including `POST /guardrails/test_custom_code`. Keep it off untrusted networks.",
+      "cmd": "docker ps --format '{{.Names}} {{.Image}}' | grep -i litellm",
+      "cite": [
+        3,
+        4
+      ]
+    },
+    {
+      "label": "Attacker has an admin key",
+      "text": "The default config requires a proxy-admin credential (the master key). These also count: a weak key like `sk-1234`; no master key at all (callers are treated as admin); any user account below 1.83.14 (CVE-2026-47101/47102) or on 1.91.0 up to the CVE-2026-114612 fix; Enterprise-licensed proxies below 1.106.5, which can leak the master key to anyone; and proxies below 1.106.9 with an Azure model but no Azure API key set, where any logged-in user can read the master key.",
+      "cite": [
+        3,
+        5,
+        6,
+        7,
+        11,
+        12,
+        13,
+        16
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Upgrade to the newest on your line",
+      "text": "1.83.11 fixed this sandbox escape, but later releases had their own admin-takeover bugs. Use at least 1.106.9, 1.108.6 or 1.109.1 (listed below). These also cover the older LiteLLM KEV entries CVE-2026-42208 and CVE-2026-42271 (fixed 1.83.7) and CVE-2026-59822 (fixed 1.84.0).",
+      "cite": [
+        3,
+        11,
+        12,
+        16,
+        14,
+        15,
+        10
+      ],
+      "versions": [
+        "litellm"
+      ]
+    },
+    {
+      "label": "Until then: block the endpoint",
+      "text": "Block `POST /guardrails/test_custom_code` at your reverse proxy or API gateway. Keep the admin port off the internet. If you use Azure models, also block the fields `tenant_id`, `client_id`, `client_secret`, `azure_username`, `azure_password` and `azure_scope` in request bodies.",
+      "cite": [
+        3,
+        4,
+        16
+      ]
+    },
+    {
+      "label": "Rotate a weak or old master key",
+      "text": "Attackers sprayed default-style keys at this endpoint. If yours is guessable or was exposed, replace it. The escape exposes provider and cloud keys stored in the proxy, so rotate those too.",
+      "cite": [
+        5
+      ]
+    },
+    {
+      "label": "Run the container as non-root",
+      "text": "The default image runs as root, so a sandbox escape gets root. LiteLLM also ships a non-root image.",
+      "cite": [
+        3,
+        5
+      ]
+    }
+  ],
+  "fixed_in": {
+    "litellm": {
+      "1.110": "1.110.0-rc.2",
+      "1.109": "1.109.1",
+      "1.108": "1.108.6",
+      "1.106": "1.106.9"
+    }
+  },
+  "slack": "LiteLLM CVE-2026-40217: a sandbox escape in the proxy's /guardrails/test_custom_code endpoint lets anyone with an admin key run commands, as root in the default Docker image. Public PoC, attempts seen, added to CISA KEV on 18 Nov (due 2 Dec). Affected: 1.81.8 through 1.83.10. Upgrade to at least 1.106.9, 1.108.6 or 1.109.1, since later releases had their own admin-takeover bugs. Until then, block that endpoint and rotate any weak master key. Check with `pip show litellm`.",
+  "sources": [
+    {
+      "title": "CISA KEV: CVE-2026-40217 added 18 Nov, due 2 Dec",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "date": "18 Nov"
+    },
+    {
+      "title": "CISA alert: four KEV additions incl. LiteLLM",
+      "url": "https://www.cisa.gov/news-events/alerts/2026/11/18/cisa-adds-four-known-exploited-vulnerabilities-catalog",
+      "date": "18 Nov"
+    },
+    {
+      "title": "LiteLLM GHSA-wxxx-gvqv-xp7p: versions, auth, workaround",
+      "url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-wxxx-gvqv-xp7p",
+      "date": "7 May"
+    },
+    {
+      "title": "X41 D-Sec: original advisory and PoC",
+      "url": "https://www.x41-dsec.de/lab/advisories/x41-2026-001-litellm/",
+      "date": "8 Apr"
+    },
+    {
+      "title": "Zenity Labs: in-the-wild attempts, key spraying",
+      "url": "https://labs.zenity.io/p/threat-actors-are-trying-to-use-litellm-s-guardrail-tester-to-run-code-as-root",
+      "date": "30 Jun"
+    },
+    {
+      "title": "GHSA-qrc4-49gv-mv9m: CVE-2026-47101, fixed 1.83.14",
+      "url": "https://github.com/advisories/GHSA-qrc4-49gv-mv9m",
+      "date": "21 May"
+    },
+    {
+      "title": "GHSA-wpfp-gwwc-vwq6: CVE-2026-47102, fixed 1.83.10",
+      "url": "https://github.com/advisories/GHSA-wpfp-gwwc-vwq6",
+      "date": "21 May"
+    },
+    {
+      "title": "LiteLLM v1.83.10-stable release: Docker tag format",
+      "url": "https://github.com/BerriAI/litellm/releases/tag/v1.83.10-stable",
+      "date": "27 Apr"
+    },
+    {
+      "title": "NVD: CVE-2026-40217",
+      "url": "https://nvd.nist.gov/vuln/detail/CVE-2026-40217"
+    },
+    {
+      "title": "LiteLLM GHSA-7488-6r32-c95q: CVE-2026-59822, fixed 1.84.0",
+      "url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-7488-6r32-c95q",
+      "date": "30 Jun"
+    },
+    {
+      "title": "LiteLLM GHSA-7hp6: CVE-2026-114612, user to admin on 1.91.0+",
+      "url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-7hp6-4w63-5g45"
+    },
+    {
+      "title": "LiteLLM GHSA-w4c7: master key leak, fixed 1.106.5",
+      "url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-w4c7-34wj-hqm8"
+    },
+    {
+      "title": "LiteLLM GHSA-72m8: no master key means admin",
+      "url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-72m8-9m7m-h278"
+    },
+    {
+      "title": "LiteLLM GHSA-r75f: CVE-2026-42208, fixed 1.83.7",
+      "url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-r75f-5x8p-qvmc"
+    },
+    {
+      "title": "LiteLLM GHSA-v4p8: CVE-2026-42271, fixed 1.83.7",
+      "url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-v4p8-mg3p-g94g"
+    },
+    {
+      "title": "LiteLLM GHSA-2rwg: master key leak via Azure models, fixed 1.106.9",
+      "url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-2rwg-2wh4-7c4f",
+      "date": "12 Nov"
+    },
+    {
+      "title": "PyPI: LiteLLM release history",
+      "url": "https://pypi.org/project/litellm/#history"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "New advisory GHSA-2rwg (master key leak via Azure models): minimum raised to 1.106.9 / 1.108.6 / 1.109.1. Safe versions added."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Review: upgrade floor raised to 1.106.5 after newer admin-takeover advisories; Docker tag caveat."
+    },
+    {
+      "date": "2026-11-18",
+      "text": "Added to CISA KEV, due 2 Dec."
+    },
+    {
+      "date": "2026-06-30",
+      "text": "Zenity reported in-the-wild exploitation attempts."
+    },
+    {
+      "date": "2026-04-08",
+      "text": "Published."
+    }
+  ],
+  "news": "2026-11-18",
+  "status_cite": {
+    "no_login": [
+      3,
+      4
+    ],
+    "exploit": [
+      4
+    ],
+    "attacks": [
+      1,
+      5
+    ],
+    "kev": [
+      1,
+      2
+    ]
+  }
+}

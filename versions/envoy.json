@@ -1,0 +1,45 @@
+{
+  "id": "envoy",
+  "name": "Envoy",
+  "about": "The newest release on each Envoy line we track. Each one fixes every Envoy bug we cover.",
+  "feed": null,
+  "filter": "envoy",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "1.40",
+      "key": "1.40",
+      "latest": "1.40.2"
+    },
+    {
+      "line": "1.39",
+      "key": "1.39",
+      "latest": "1.39.6"
+    },
+    {
+      "line": "1.38",
+      "key": "1.38",
+      "latest": "1.38.9"
+    },
+    {
+      "line": "1.37",
+      "key": "1.37",
+      "latest": "1.37.11"
+    },
+    {
+      "line": "1.36",
+      "key": "1.36",
+      "latest": "1.36.13"
+    }
+  ],
+  "sources": [
+    {
+      "title": "Envoy: GHSA-3wvj-j6qm-62mr",
+      "url": "https://github.com/envoyproxy/envoy/security/advisories/GHSA-3wvj-j6qm-62mr"
+    },
+    {
+      "title": "Envoy: releases",
+      "url": "https://github.com/envoyproxy/envoy/releases"
+    }
+  ]
+}

@@ -1,0 +1,182 @@
+{
+  "slug": "php2shell",
+  "name": "PHP2Shell",
+  "aliases": [
+    "php",
+    "php-fpm",
+    "mod_php",
+    "session.upload_progress"
+  ],
+  "cves": [
+    "CVE-2026-109618",
+    "CVE-2026-109619"
+  ],
+  "ghsa": [
+    "GHSA-w8hw-w9fx-j79w",
+    "GHSA-6wmf-4rv5-p3rp"
+  ],
+  "product": "PHP",
+  "disclosed": "2026-10-21",
+  "updated": "2026-11-20",
+  "verdict": "now",
+  "tile_line": "Exploited in the wild. In CISA KEV.",
+  "summary": "Two bugs in PHP itself let an attacker with no login run code on web servers that run PHP. Attacks are already happening, so if you serve PHP on the web, update now.",
+  "affected": [
+    {
+      "label": "PHP older than 8.2.35 / 8.3.36 / 8.4.27 / 8.5.12",
+      "text": "Or any end-of-life branch (8.1 and older), or patched but workers not restarted since. Check the runtime that serves the web, not just the CLI. Distros may backport the fix without changing the version number.",
+      "cmd": "php -v\nphp-fpm -v",
+      "cite": [
+        1,
+        5
+      ]
+    },
+    {
+      "label": "PHP serves web requests",
+      "text": "Via mod_php, PHP-FPM, php-cgi, FrankenPHP or LiteSpeed. Full exploitation has been shown on Apache mod_php, and for CVE-2026-109619 also on PHP-FPM. Command-line-only use isn't in scope.",
+      "cmd": "apachectl -M | grep php",
+      "cite": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update and restart PHP",
+      "text": "Update to 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov 2026), then restart all workers. These include the 21 Oct PHP2Shell fixes plus newer security fixes. 8.1 and older get no official release; use a vendor with long-term support or upgrade.",
+      "cite": [
+        1,
+        8,
+        10
+      ],
+      "versions": [
+        "php"
+      ]
+    },
+    {
+      "label": "Can't update yet? Change these settings",
+      "text": "Not a full fix, per PHP. Set them in php.ini or the FPM pool config, not with `ini_set()`, then restart. On PHP 8.5 also set `fatal_error_backtraces = 0`. Keep a container or cgroup memory limit, because `memory_limit = -1` removes PHP's own cap.",
+      "cmd": "session.upload_progress.enabled = 0\nmemory_limit = -1",
+      "cite": [
+        1,
+        2,
+        3
+      ]
+    }
+  ],
+  "fixed_in": {
+    "php": {
+      "8.5": "8.5.12",
+      "8.4": "8.4.27",
+      "8.3": "8.3.36",
+      "8.2": "8.2.35",
+      "8.6": "8.6.0"
+    }
+  },
+  "slack": "PHP2Shell (CVE-2026-109618/109619): unauthenticated RCE in PHP, exploited in the wild and in CISA KEV. If PHP serves web traffic (mod_php, FPM, CGI), update to 8.6.0, 8.5.13, 8.4.28, 8.3.37 or 8.2.36 (19 Nov) and restart workers. 8.1 and older: no official fix.",
+  "sources": [
+    {
+      "title": "PHP: release announcements and advisory",
+      "url": "https://www.php.net/archive/2026.php",
+      "date": "21 Oct"
+    },
+    {
+      "title": "PHP GHSA: CVE-2026-109618",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-w8hw-w9fx-j79w"
+    },
+    {
+      "title": "PHP GHSA: CVE-2026-109619",
+      "url": "https://github.com/php/php-src/security/advisories/GHSA-6wmf-4rv5-p3rp"
+    },
+    {
+      "title": "CISA KEV: added 26 Oct",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "date": "26 Oct"
+    },
+    {
+      "title": "Pentest-Tools: version checks, backport caveat",
+      "url": "https://pentest-tools.com/research/php2shell-rce"
+    },
+    {
+      "title": "BleepingComputer: attacks confirmed",
+      "url": "https://www.bleepingcomputer.com/news/security/cisa-confirms-php2shell-vulnerabilities-now-exploited-in-attacks"
+    },
+    {
+      "title": "Wiz: exploitation so far",
+      "url": "https://www.wiz.io/blog/php2shell-exploitation-so-far",
+      "date": "27 Oct"
+    },
+    {
+      "title": "PHP: 8.x ChangeLog, 19 Nov 2026 releases",
+      "url": "https://www.php.net/ChangeLog-8.php#8.5.13",
+      "date": "19 Nov"
+    },
+    {
+      "title": "BleepingComputer: public exploit worked on a single-worker mod_php setup",
+      "url": "https://www.bleepingcomputer.com/news/security/php2shell-security-flaws-now-sucessfully-exploited-in-the-wild/",
+      "date": "26 Oct"
+    },
+    {
+      "title": "PHP: 8.6.0 ChangeLog",
+      "url": "https://www.php.net/ChangeLog-8.php#8.6.0",
+      "date": "19 Nov"
+    },
+    {
+      "title": "php-src: 19 Nov security advisories (eight rated Critical)",
+      "url": "https://github.com/php/php-src/security/advisories"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "PHP 8.6.0 added. Safe versions added."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "PHP's 19 Nov releases (8.5.13, 8.4.28, 8.3.37 or 8.2.36) are now the recommended update; exploit source and FPM detail added."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Added PHP's scheduled 19 Nov release (pending)."
+    },
+    {
+      "date": "2026-10-26",
+      "text": "Added to CISA KEV. Verdict raised to Patch now."
+    },
+    {
+      "date": "2026-10-21",
+      "text": "Published."
+    }
+  ],
+  "status": {
+    "exploit": "public",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-10-26",
+      "due": "2026-10-29"
+    },
+    "scare": 3.9,
+    "no_login": true
+  },
+  "status_cite": {
+    "no_login": [
+      1,
+      2,
+      3
+    ],
+    "exploit": [
+      9,
+      7
+    ],
+    "attacks": [
+      4,
+      6,
+      7
+    ],
+    "kev": [
+      4
+    ]
+  }
+}

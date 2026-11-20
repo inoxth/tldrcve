@@ -1,0 +1,198 @@
+{
+  "slug": "puppet",
+  "name": "Puppet Server RCE",
+  "aliases": [
+    "puppet",
+    "openvox",
+    "puppet enterprise",
+    "puppetserver",
+    "autosign"
+  ],
+  "cves": [
+    "CVE-2026-115731"
+  ],
+  "ghsa": [
+    "GHSA-ffr6-rwpm-p5wq"
+  ],
+  "product": "Puppet / OpenVox",
+  "disclosed": "2026-11-03",
+  "updated": "2026-11-20",
+  "verdict": "now",
+  "tile_line": "Public exploit. In CISA KEV, due 1 Dec.",
+  "summary": "Anyone with a signed Puppet agent certificate can send a crafted report and run code on your Puppet Server, which holds the key that signs every node's certificate. Any compromised agent is enough, and autosigning lets anyone who can reach the server get a certificate.",
+  "affected": [
+    {
+      "label": "Server below a fixed release",
+      "text": "OpenVox Server below 9.2.0 / 8.18.0, Puppet Enterprise before 2023.8.13 / 2025.12.1 / 2026.0.1, and Puppet Core before 9.1.3 (Puppet Server 9.0.24.1). OpenVox's advisory says up to 9.1.0 / 8.17.0, but 9.1.1 and 8.17.1 shipped before the fix, so count them as affected. Older open-source Puppet gets no fix, though Debian patched its puppet packages (bookworm 7.23.0-1+deb12u1, trixie 8.10.0-5+deb13u1). The command shows the Puppet Server version, not the Puppet Enterprise release.",
+      "cmd": "puppetserver --version",
+      "cite": [
+        2,
+        3,
+        9,
+        7,
+        10,
+        11,
+        8
+      ]
+    },
+    {
+      "label": "Attacker can get a signed cert",
+      "text": "Any existing agent's cert works. If autosign prints `true`, anyone who can reach the server can get one.",
+      "cmd": "puppet config print autosign --section server",
+      "cite": [
+        2
+      ]
+    },
+    {
+      "label": "Report endpoint is reachable",
+      "text": "`PUT /puppet/v3/report` on the server, which agents use normally.",
+      "cite": [
+        2
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Upgrade the server",
+      "text": "OpenVox: server 9.2.0 / 8.18.0, agent 9.3.0 / 8.32.0, openvoxdb 9.2.0 / 8.18.0. Puppet Enterprise: 2023.8.13 / 2025.12.1 / 2026.0.1. Puppet Core: 9.1.3 with Puppet Server 9.0.24.1. Debian: install the patched packages. Other open-source Puppet: move to OpenVox, Puppet Core or Enterprise.",
+      "cite": [
+        2,
+        3,
+        7,
+        10,
+        11,
+        8
+      ],
+      "versions": [
+        "openvox"
+      ]
+    },
+    {
+      "label": "Until then: turn off autosign",
+      "text": "Set `autosign = false` in the `[server]` section of puppet.conf, restart, and confirm with the command below. Also limit network access to the server.",
+      "cmd": "puppet config print autosign --section server",
+      "cite": [
+        4,
+        6
+      ]
+    },
+    {
+      "label": "Also covers CVE-2026-115732",
+      "text": "The same releases fix a sibling bug where a cert for `evil.target.example.com` can act as `target.example.com`.",
+      "cite": [
+        5
+      ]
+    }
+  ],
+  "fixed_in": {
+    "openvox": {
+      "openvox-server 9": "9.2.0",
+      "openvox-server 8": "8.18.0",
+      "openvox agent 9": "9.3.0",
+      "openvox agent 8": "8.32.0",
+      "Puppet Core 9": "9.1.3",
+      "pe-2026.0": "2026.0.1",
+      "pe-2025.12": "2025.12.1",
+      "pe-2023.8": "2023.8.13"
+    }
+  },
+  "slack": "Puppet Server RCE (CVE-2026-115731): anyone with a signed agent cert can run code on Puppet Server (and reach the CA key). Public exploit, in CISA KEV (due 1 Dec). Upgrade to openvox-server 9.2.0 / 8.18.0, PE 2023.8.13 / 2025.12.1 / 2026.0.1, or Puppet Core 9.1.3 (Puppet Server 9.0.24.1). Until then: autosign = false.",
+  "sources": [
+    {
+      "title": "CISA KEV: added 17 Nov, due 1 Dec",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog",
+      "date": "17 Nov"
+    },
+    {
+      "title": "OpenVox GHSA-ffr6-rwpm-p5wq: versions, exploit",
+      "url": "https://github.com/OpenVoxProject/openvox/security/advisories/GHSA-ffr6-rwpm-p5wq",
+      "date": "3 Nov"
+    },
+    {
+      "title": "Vox Pupuli: fixed versions",
+      "url": "https://voxpupuli.org/blog/2026/11/03/critical-cve-updates/"
+    },
+    {
+      "title": "Red Hat: CVE-2026-115731 / 115732",
+      "url": "https://access.redhat.com/security/cve/CVE-2026-115731"
+    },
+    {
+      "title": "oss-security: disclosure",
+      "url": "https://www.openwall.com/lists/oss-security/2026/11/03/14",
+      "date": "3 Nov"
+    },
+    {
+      "title": "Puppet docs: disable autosigning",
+      "url": "https://help.puppet.com/core/8.13/Content/PuppetCore/ssl_disable_autosigning.htm"
+    },
+    {
+      "title": "CVE record (Perforce): Puppet Enterprise fixed versions",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-115731"
+    },
+    {
+      "title": "Debian: patched puppet-agent (DLA-4884-1, DSA-6608-1)",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-115731"
+    },
+    {
+      "title": "OpenVox Server 9.1.1: shipped 29 Oct, before the fix",
+      "url": "https://github.com/OpenVoxProject/openvox-server/releases/tag/9.1.1",
+      "date": "29 Oct"
+    },
+    {
+      "title": "Puppet Core 9.1.3 release notes: fixes both CVEs",
+      "url": "https://help.puppet.com/core/current/Content/PuppetCore/PuppetReleaseNotes/release_notes_puppet_x-9-1-3.htm"
+    },
+    {
+      "title": "Puppet Server release notes: 9.0.24.1 patched",
+      "url": "https://help.puppet.com/core/current/Content/PuppetCore/server/release_notes.htm"
+    },
+    {
+      "title": "OpenVox: releases",
+      "url": "https://github.com/OpenVoxProject/openvox/releases"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Puppet Core 9.1.3 (Puppet Server 9.0.24.1) fixes it. OpenVox Server 9.1.1 / 8.17.1 count as affected too. Safe versions added."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Review: Debian's patched packages, Puppet Enterprise versions sourced, read-only autosign check."
+    },
+    {
+      "date": "2026-11-17",
+      "text": "Added to CISA KEV. Verdict raised to Patch now."
+    },
+    {
+      "date": "2026-11-03",
+      "text": "Published."
+    }
+  ],
+  "status": {
+    "exploit": "public",
+    "attacks": "seen",
+    "kev": {
+      "added": "2026-11-17",
+      "due": "2026-12-01"
+    },
+    "scare": 3.7,
+    "no_login": false,
+    "needs": "a signed agent certificate"
+  },
+  "status_cite": {
+    "no_login": [
+      2,
+      4
+    ],
+    "exploit": [
+      2
+    ],
+    "attacks": [
+      1
+    ],
+    "kev": [
+      1
+    ]
+  }
+}

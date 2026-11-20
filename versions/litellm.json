@@ -1,0 +1,50 @@
+{
+  "id": "litellm",
+  "name": "LiteLLM",
+  "about": "The newest release on each LiteLLM line we track. Each one fixes every LiteLLM bug we cover.",
+  "feed": null,
+  "filter": "litellm",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "1.110",
+      "key": "1.110",
+      "latest": "1.110.1"
+    },
+    {
+      "line": "1.109",
+      "key": "1.109",
+      "latest": "1.109.2"
+    },
+    {
+      "line": "1.108 (LTS)",
+      "key": "1.108",
+      "latest": "1.108.12"
+    },
+    {
+      "line": "1.106",
+      "key": "1.106",
+      "latest": "1.106.11"
+    }
+  ],
+  "older": "Releases older than 1.106 have no fix: move up.",
+  "unfixed": [
+    {
+      "line": "1.105 and older",
+      "note": "No backported fix: move to 1.106 or later.",
+      "pages": [
+        "litellm"
+      ]
+    }
+  ],
+  "sources": [
+    {
+      "title": "LiteLLM GHSA-2rwg: master key leak via Azure models, fixed 1.106.9",
+      "url": "https://github.com/BerriAI/litellm/security/advisories/GHSA-2rwg-2wh4-7c4f"
+    },
+    {
+      "title": "PyPI: LiteLLM release history",
+      "url": "https://pypi.org/project/litellm/#history"
+    }
+  ]
+}

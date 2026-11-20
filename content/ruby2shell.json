@@ -1,0 +1,199 @@
+{
+  "slug": "ruby2shell",
+  "name": "Ruby2Shell",
+  "aliases": [
+    "ruby",
+    "ruby2shell",
+    "ruby2ßhell",
+    "rails",
+    "ruby on rails",
+    "sinatra",
+    "ghsa-34m4-m9fh-gqp5",
+    "gitlab",
+    "github enterprise server",
+    "chatwoot"
+  ],
+  "cves": [
+    "CVE-2026-132825"
+  ],
+  "ghsa": [
+    "GHSA-34m4-m9fh-gqp5"
+  ],
+  "product": "Ruby",
+  "also_in": [
+    "GitLab",
+    "GitHub Enterprise Server",
+    "Chatwoot"
+  ],
+  "disclosed": "2026-11-18",
+  "news": "2026-11-19",
+  "updated": "2026-11-20",
+  "verdict": "if",
+  "tile_line": "Rails or classic Sinatra on old Ruby. No public exploit.",
+  "summary": "A one-byte memory bug in how Ruby changes the case of text in older Western encodings (like ISO-8859-1) may let an attacker with no login run code on the server. The researchers who named it say default Rails and classic-style Sinatra apps reach it. The fix is a Ruby upgrade, which also fixes six related regex and string bugs.",
+  "affected": [
+    {
+      "label": "Ruby older than the fix",
+      "text": "Affected: 3.3.13 and earlier, 3.4.0–3.4.12 and 4.0.0–4.0.9. Ruby 3.2 and older are end of life and won't get a fix. Check the Ruby your app actually runs (its container image or `.ruby-version`), not just the system one. Distros may patch without changing the version; on 19 Nov Ubuntu and Debian were still evaluating.",
+      "cmd": "ruby -v",
+      "cite": [
+        1,
+        2,
+        6,
+        8,
+        9
+      ]
+    },
+    {
+      "label": "Web input gets case-changed",
+      "text": "Veria Labs says default Rails and classic-style Sinatra apps reach the bug with no login, but hasn't said through which code path. Other frameworks and plain Rack aren't exposed by default, unless your code calls `upcase`, `swapcase`, `downcase(:fold)` or `casecmp?` on ISO-8859 or Windows-125x text; UTF-8 isn't affected. Sources disagree on reach: Ruby rates it Critical, the CVE record scores it 7.4 (local), and Sekurak thinks a crash is likelier than code execution. Run the check in your app's folder.",
+      "cmd": "bundle list | grep -E '\\* (rails|sinatra) \\('",
+      "cite": [
+        2,
+        3,
+        4,
+        6,
+        7
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Upgrade Ruby",
+      "text": "To 3.3.14, 3.4.13 or 4.0.10. Then restart app servers and rebuild container images. Updating Rails or other gems doesn't help: the fix is in Ruby itself.",
+      "cite": [
+        1,
+        5,
+        6
+      ],
+      "versions": [
+        "ruby"
+      ]
+    },
+    {
+      "label": "On Ruby 3.2 or older? Move up",
+      "text": "These are end of life and won't be fixed. Move to a supported series.",
+      "cite": [
+        1
+      ]
+    },
+    {
+      "label": "Update self-hosted apps",
+      "text": "Some bundle their own Ruby, which a system upgrade doesn't touch. On 19 Nov, Veria listed GitLab 19.6.0, GitHub Enterprise Server 3.22.5 and Chatwoot 4.20.0 as still affected, and Mastodon 4.7.6, OpenProject 17.9.8 and the Discourse base image 2.0.20261119-0203 as fixed. Aikido's list, made earlier, shows older versions of the last three as affected. For GitLab, check its bundled Ruby with the command below.",
+      "cmd": "/opt/gitlab/embedded/bin/ruby -v",
+      "cite": [
+        4,
+        5,
+        6
+      ]
+    },
+    {
+      "label": "Can't upgrade yet?",
+      "text": "Ruby gives no workaround. For self-hosted apps, Aikido suggests keeping them reachable only over VPN or an IP allowlist until the vendor ships a fix.",
+      "cite": [
+        5
+      ]
+    },
+    {
+      "label": "Patch before the exploit is out",
+      "text": "Veria Labs plans to publish its proof of concept on 25 Nov 2026, or later if major vendors haven't shipped a fix by then.",
+      "cite": [
+        4
+      ],
+      "pending": {
+        "expected": "2026-11-25"
+      }
+    }
+  ],
+  "fixed_in": {
+    "ruby": {
+      "4.0": "4.0.10",
+      "3.4": "3.4.13",
+      "3.3": "3.3.14"
+    }
+  },
+  "slack": "Ruby2Shell (CVE-2026-132825, GHSA-34m4-m9fh-gqp5): one-byte heap overflow in Ruby's case conversion for legacy encodings like ISO-8859-1. Ruby rates it Critical; the researchers say default Rails and classic Sinatra apps are reachable with no login. Affects Ruby up to 3.3.13, 3.4.0–3.4.12 and 4.0.0–4.0.9; 3.2 and older are end of life with no fix. Ruby knows of RCE proof-of-concepts, none public yet (Veria plans 25 Nov), no attacks seen, not in KEV. Check: ruby -v. Fix: Ruby 3.3.14 / 3.4.13 / 4.0.10, then restart and rebuild images; updating Rails won't help.",
+  "sources": [
+    {
+      "title": "Ruby: security advisory, versions, PoCs known",
+      "url": "https://www.ruby-lang.org/en/news/2026/11/18/multiple-vulnerabilities-in-regexp-and-string/",
+      "date": "18 Nov"
+    },
+    {
+      "title": "GitHub: GHSA-34m4-m9fh-gqp5, rated Critical",
+      "url": "https://github.com/ruby/ruby/security/advisories/GHSA-34m4-m9fh-gqp5",
+      "date": "19 Nov"
+    },
+    {
+      "title": "CVE record: CVE-2026-132825, CVSS 7.4 local",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-132825",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Veria Labs: write-up, frameworks, bundled apps",
+      "url": "https://verialabs.com/ruby2shell/",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Aikido: no attacks, no workaround, VPN advice",
+      "url": "https://www.aikido.dev/blog/ruby2shell",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Equixly: gem updates don't help, Rails path unknown",
+      "url": "https://equixly.com/blog/2026/11/19/ruby2shell-pre-auth-heap-overflow-in-ruby/",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Sekurak: doubts reliable code execution",
+      "url": "https://sekurak.pl/ruby2shell-heap-overflow-przy-zmianie-wielkosci-liter-w-ruby-rzekomo-pozwala-na-rce",
+      "date": "19 Nov"
+    },
+    {
+      "title": "Ubuntu: CVE tracker",
+      "url": "https://ubuntu.com/security/CVE-2026-132825"
+    },
+    {
+      "title": "Debian: security tracker",
+      "url": "https://security-tracker.debian.org/tracker/CVE-2026-132825"
+    },
+    {
+      "title": "CISA KEV catalog: not listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-20",
+      "text": "Veria moved its exploit release to 25 Nov (later if vendors haven't shipped fixes). Safe versions added."
+    },
+    {
+      "date": "2026-11-19",
+      "text": "Published."
+    }
+  ],
+  "status": {
+    "exploit": "demonstrated",
+    "attacks": "none",
+    "kev": null,
+    "scare": 2.6,
+    "no_login": true
+  },
+  "status_cite": {
+    "exploit": [
+      1,
+      4
+    ],
+    "attacks": [
+      5,
+      6
+    ],
+    "kev": [
+      10
+    ],
+    "no_login": [
+      4,
+      5
+    ]
+  }
+}

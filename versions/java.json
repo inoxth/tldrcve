@@ -1,0 +1,45 @@
+{
+  "id": "java",
+  "name": "Java",
+  "about": "The newest release on each Java line we track. Each one fixes every Java bug we cover.",
+  "feed": null,
+  "filter": "java",
+  "checked": "2026-11-20",
+  "lines": [
+    {
+      "line": "27",
+      "key": "27",
+      "latest": "27.0.1.1"
+    },
+    {
+      "line": "25",
+      "key": "25",
+      "latest": "25.0.5.1"
+    },
+    {
+      "line": "21",
+      "key": "21",
+      "latest": "21.0.13.1"
+    },
+    {
+      "line": "17",
+      "key": "17",
+      "latest": "17.0.21.1"
+    }
+  ],
+  "older": "Vendor builds add a suffix: Corretto 17.0.21.1.2, Temurin 17.0.21.1+2 (27.0.1.1.4 / +4 on Java 27). Standard Java 8 and 11 aren't affected.",
+  "sources": [
+    {
+      "title": "Qualys: fixed builds",
+      "url": "https://blog.qualys.com/vulnerabilities-threat-research/2026/11/17/how-to-find-mitigate-and-patch-the-critical-java4shell-flaw-cve-2026-114938-now"
+    },
+    {
+      "title": "Oracle: JDK 17.0.21.1 release notes",
+      "url": "https://www.oracle.com/java/technologies/javase/17-0-21-1-relnotes.html"
+    },
+    {
+      "title": "OpenJDK Vulnerability Group: advisory, affects 17, 21, 25, 27",
+      "url": "https://openjdk.org/groups/vulnerability/advisories/2026-11-17"
+    }
+  ]
+}
