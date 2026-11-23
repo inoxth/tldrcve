@@ -1,0 +1,149 @@
+{
+  "slug": "whatsapp-nov-2026",
+  "name": "WhatsApp Nov fixes",
+  "aliases": [
+    "whatsapp",
+    "whatsapp business",
+    "meta",
+    "click to whatsapp",
+    "ad reply",
+    "ip address",
+    "order details",
+    "sql injection",
+    "meta ai",
+    "private processing",
+    "cve-2026-23871",
+    "cve-2026-102769",
+    "cve-2026-44908"
+  ],
+  "cves": [
+    "CVE-2026-23871",
+    "CVE-2026-102769",
+    "CVE-2026-44908"
+  ],
+  "product": "WhatsApp",
+  "disclosed": "2026-11-20",
+  "updated": "2026-11-23",
+  "verdict": "cycle",
+  "tile_line": "Real bugs, low risk. Update the app as usual.",
+  "summary": "WhatsApp disclosed three bugs on 20 Nov 2026. The one reported as abused could reveal your phone's IP address to a scammer who sent a crafted ad-reply message; WhatsApp says it may have been abused with spam, and it's fixed in 2.26.17.4. The other two need you to tap a message sent from an unofficial app, or an attacker inside Meta's own systems, and Meta says it has seen no sign either was exploited.",
+  "status": {
+    "exploit": "demonstrated",
+    "attacks": "seen",
+    "kev": null,
+    "no_login": false,
+    "needs": "a WhatsApp account to message you; the Meta AI bug instead needs a position inside Meta's infrastructure",
+    "scare": 1.3
+  },
+  "status_cite": {
+    "exploit": [
+      3
+    ],
+    "attacks": [
+      2,
+      5,
+      6,
+      7
+    ],
+    "kev": [
+      8
+    ],
+    "no_login": [
+      2,
+      3,
+      4
+    ]
+  },
+  "affected": [
+    {
+      "label": "WhatsApp older than its fix",
+      "text": "The IP address bug (CVE-2026-23871) is in WhatsApp and WhatsApp Business for Android from 2.20.198.3, before 2.26.17.4. The order-message bug (CVE-2026-102769) is in WhatsApp for Android before 2.26.35.74; its description names only WhatsApp for Android, but the same record also lists WhatsApp Business for Android from 2.22.3.7, before 2.26.35.74. The Meta AI bug (CVE-2026-44908) is in WhatsApp for iOS before 2.26.24.72, WhatsApp Business for iOS and WhatsApp for Mac before 2.26.23.72, WhatsApp for Android before 2.26.23.74 and WhatsApp Business for Android before 2.26.23.70.",
+      "cite": [
+        1,
+        2,
+        3,
+        4
+      ]
+    },
+    {
+      "label": "An attacker in the right position",
+      "text": "For the IP address bug, that's anyone who can send you a crafted Click to WhatsApp ad-reply message: once it's shown in a chat, your phone can fetch media from the attacker's server and reveal your IP address. For the order-message bug, you have to tap a crafted \"order details\" message sent from an unofficial WhatsApp client; it can delete WhatsApp's own locally stored files, and leak one bit of information about your chat database if you're online when it arrives. For the Meta AI bug, the attacker has to be inside Meta's infrastructure, and Meta says a third-party transparency ledger confirms no exploitation.",
+      "cite": [
+        2,
+        3,
+        4
+      ]
+    }
+  ],
+  "do": [
+    {
+      "label": "Update WhatsApp from the store",
+      "text": "Versions with every fix that applies to each app: WhatsApp for Android 2.26.35.74, WhatsApp for iOS 2.26.24.72, WhatsApp Business for iOS and WhatsApp for Mac 2.26.23.72. For WhatsApp Business for Android, sources conflict: HKCERT gives 2.26.23.70 (the Meta AI fix), but the CVE record for the order-message bug lists Business for Android as affected before 2.26.35.74, so get 2.26.35.74 or later.",
+      "cite": [
+        1,
+        3,
+        4,
+        7
+      ]
+    },
+    {
+      "label": "Why it isn't Patch now",
+      "text": "Attacks were reported only for the IP address bug, and it only reveals an IP address: Meta rates it 3.5 (Low). WhatsApp says it may have been abused with spam messages, and a spokesperson told SecurityWeek \"we believe a scammer was using it to make their scam message seem more credible\". HKCERT says it is being exploited in scattered cases, while CISA's early assessment in the CVE records says no exploitation for all three. Meta rates the other two 6.8 and 4.8 (Medium), and its score for the order-message bug says working exploit code exists; no source links to public code. None of the three is on CISA's list of exploited bugs.",
+      "cite": [
+        2,
+        3,
+        4,
+        6,
+        7,
+        8
+      ]
+    }
+  ],
+  "versions_skip": "No release feed we track for WhatsApp; the fixed version for each app is in the steps.",
+  "slack": "WhatsApp, disclosed 20 Nov 2026 (CVE-2026-23871, CVE-2026-102769, CVE-2026-44908): three real but low-risk bugs. An Android ad-reply bug could reveal your IP address to a scammer (Meta: may have been abused with spam; fixed in 2.26.17.4). An order-message SQL injection needs you to tap a message from an unofficial client and can delete WhatsApp's own local files (no exploitation seen). A Meta AI certificate check needs an attacker inside Meta (ledger confirms no exploitation). Meta rates them 3.5, 6.8 and 4.8; not on CISA KEV. Update through the store: Android 2.26.35.74, iOS 2.26.24.72, Business iOS and Mac 2.26.23.72; Business Android 2.26.35.74 (sources conflict, HKCERT says 2.26.23.70).",
+  "sources": [
+    {
+      "title": "WhatsApp: security advisories 2026, the three CVEs and fixed versions",
+      "url": "https://www.whatsapp.com/security/advisories/2026"
+    },
+    {
+      "title": "CVE record: CVE-2026-23871, ad-reply IP leak, may have been abused, Meta 3.5, CISA exploitation none",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-23871",
+      "date": "20 Nov"
+    },
+    {
+      "title": "CVE record: CVE-2026-102769, order-details SQL injection, Meta 6.8, no exploitation seen",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-102769",
+      "date": "20 Nov"
+    },
+    {
+      "title": "CVE record: CVE-2026-44908, Meta AI attestation check, Meta 4.8, ledger confirms no exploitation",
+      "url": "https://www.cve.org/CVERecord?id=CVE-2026-44908",
+      "date": "20 Nov"
+    },
+    {
+      "title": "Meta: advisory for CVE-2026-23871",
+      "url": "https://www.facebook.com/security/advisories/cve-2026-23871"
+    },
+    {
+      "title": "SecurityWeek: WhatsApp found the IP bug while disrupting a scam campaign",
+      "url": "https://www.securityweek.com/whatsapp-fixes-flaw-uncovered-while-disrupting-scam-campaign/",
+      "date": "20 Nov"
+    },
+    {
+      "title": "HKCERT: WhatsApp multiple vulnerabilities, Medium risk, scattered exploitation of CVE-2026-23871, update versions",
+      "url": "https://www.hkcert.org/security-bulletin/whatsapp-multiple-vulnerabilities_20261123",
+      "date": "23 Nov"
+    },
+    {
+      "title": "CISA KEV catalog: none of the three listed",
+      "url": "https://www.cisa.gov/known-exploited-vulnerabilities-catalog"
+    }
+  ],
+  "changes": [
+    {
+      "date": "2026-11-23",
+      "text": "Published."
+    }
+  ]
+}
